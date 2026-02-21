@@ -139,6 +139,10 @@ sudo gem install cocoapods
 xcode-select --install
 \`\`\`
 
+## React Native CLI Installation Guide
+For the most up-to-date and detailed instructions on how to install all dependencies for both iOS and Android (including Java, Android Studio, Watchman, etc.), please follow the official guide:
+🔗 [**React Native Environment Setup Guide**](https://reactnative.dev/docs/environment-setup)
+
 ## Android Setup
 \`\`\`bash
 # Install Android Studio
@@ -173,6 +177,10 @@ Extensions ที่แนะนำ:
 sudo gem install cocoapods
 xcode-select --install
 \`\`\`
+
+## คู่มือติดตั้ง React Native (Official Guide)
+สำหรับวิธีติดตั้ง dependencies ทั้งหมดอย่างละเอียด (เช่น Java, Android Studio, Watchman) แนะนำให้อ้างอิงจากคู่มือหลักของ React Native เพราะมีการอัปเดตตลอดเวลาครับ:
+🔗 [**React Native Environment Setup Guide**](https://reactnative.dev/docs/environment-setup)
 
 ## ตั้งค่า Android
 \`\`\`bash
