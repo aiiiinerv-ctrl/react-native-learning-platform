@@ -608,6 +608,78 @@ const styles = StyleSheet.create({
         ]
       },
       {
+        id: 'b06b-custom-components',
+        titleEn: 'Component Extraction (export function)',
+        titleTh: 'การแยก Component (export function)',
+        descriptionEn: 'How and when to extract UI into reusable functions',
+        descriptionTh: 'วิธีและจังหวะเวลาในการแยก UI เป็น Component ย่อย',
+        sdkVersion: '0.76',
+        lastUpdated: '2026-02-22',
+        contentEn: `# Custom Components & Export Function
+
+## What is \`export function\`?
+In React Native, any UI piece can be a function that returns JSX. We use \`export function MyComponent()\` so we can import and reuse it in other files.
+
+## When should you extract a new component?
+1. **Reusability**: If you use the exact same Button or Card in more than 2 places.
+2. **Readability (Clean Code)**: If your screen file goes over 150-200 lines, it's time to break it down. Reading a massive file is exactly like reading a book with no paragraphs.
+3. **Performance**: Isolating complex logic into a small component prevents the entire huge screen from re-rendering.
+
+## How to extract?
+1. Create a new file (e.g., \`components/CustomButton.tsx\`).
+2. Write \`export function CustomButton({ title }) { ... }\`.
+3. \`import { CustomButton }\` in your main screen.`,
+        contentTh: `# การแยก Component (export function)
+
+## \`export function\` คืออะไร?
+ใน React Native หน้าตาแอป (UI) ทุกส่วนคือฟังก์ชันที่คืนค่าเป็นแท็ก JSX การที่เราใช้ \`export function ชื่อคอมโพเนนต์()\` ก็เพื่อให้ไฟล์อื่นสามารถดึง (import) ชิ้นส่วนนี้ไปประกอบร่างใช้งานต่อได้ครับ
+
+## แนวทาง: เมื่อไหร่ที่ควรแยก Component ใหม่?
+1. **เมื่อมีการใช้ซ้ำ (Reusability)**: ถ้าคุณต้องสร้างปุ่มหน้าตาเดิมๆ หรือการ์ดแบบเดิมๆ เกิน 2 ที่ขึ้นไป ควรแยกออกมาเลยครับ
+2. **เมื่อโค้ดเริ่มยาวเกินไป (Readability)**: ถ้าไฟล์หน้าจอ (Screen) โค้ดยาวทะลุ 150-200 บรรทัด นั่นคือสัญญาณไฟแดง! การอ่านไฟล์ยาวๆ ก็เหมือนอ่านหนังสือที่ไม่มีการเว้นย่อหน้าครับ ควรแตกชิ้นส่วนย่อยๆ เช่น \`Header\`, \`UserProfile\`, \`Footer\` ออกมา
+3. **เรื่องประสิทธิภาพ (Performance)**: ถ้ามีจุดขยับยุ๊กยิ๊กหรือโหลดข้อมูลหนักๆ กองรวมกัน การแยก Component จะช่วยให้แอปอัพเดตเฉพาะจุดที่เปลี่ยน ไม่ต้องวาดใหม่ทั้งหน้าจอครับ
+
+## วิธีการดึงออกไปสร้างใหม่
+1. สร้างไฟล์ใหม่ในโฟลเดอร์ \`components/\` เช่น \`CustomButton.tsx\`
+2. สร้างฟังก์ชัน \`export function CustomButton({ title }) { ... }\`
+3. ไปที่หน้าจอหลัก แล้ว \`import { CustomButton }\` มาวางประกอบได้เลยครับ`,
+        codeExamples: [
+          {
+            title: 'Component Extraction Example',
+            language: 'tsx',
+            code: `// 📁 components/ActionCard.tsx
+import { View, Text, Pressable } from 'react-native';
+
+// 1. We EXPORT the function so others can use it
+// 2. We use PROPS to make it dynamic
+export function ActionCard({ title, onPress }) {
+  return (
+    <Pressable onPress={onPress} className="p-4 bg-white rounded-lg shadow-sm mb-4">
+      <Text className="text-lg font-bold text-gray-800">{title}</Text>
+    </Pressable>
+  );
+}
+
+// -------------------------------------------------- \\\\
+
+// 📁 screens/HomeScreen.tsx
+import { View } from 'react-native';
+import { ActionCard } from '../components/ActionCard';
+
+export function HomeScreen() {
+  return (
+    <View className="flex-1 p-6 bg-gray-50">
+      {/* 3. Reusing the component makes the screen very clean! */}
+      <ActionCard title="Edit Profile" onPress={() => console.log('Edit')} />
+      <ActionCard title="Settings" onPress={() => console.log('Settings')} />
+      <ActionCard title="Logout" onPress={() => console.log('Logout')} />
+    </View>
+  );
+}`
+          }
+        ]
+      },
+      {
         id: 'b07-styling',
         titleEn: 'Styling & Flexbox',
         titleTh: 'Styling และ Flexbox',
@@ -673,6 +745,82 @@ export function TailwindCard() {
   return (
     <View className="p-4 bg-white rounded-lg">
       <Text className="text-xl font-bold">Hello</Text>
+    </View>
+  );
+}`
+          }
+        ]
+      },
+      {
+        id: 'b07b-nativewind',
+        titleEn: 'NativeWind vs Tailwind CSS',
+        titleTh: 'เจาะลึก NativeWind vs Tailwind CSS',
+        descriptionEn: 'Pros, cons, and appropriate usage of NativeWind',
+        descriptionTh: 'ข้อดี ข้อเสีย และการเลือกใช้ NativeWind',
+        sdkVersion: '0.76',
+        lastUpdated: '2026-02-22',
+        contentEn: `# NativeWind vs Tailwind CSS
+
+## What's the difference?
+**Tailwind CSS** is strictly made for the Web (HTML/CSS). You cannot use it directly on native iOS/Android views.
+**NativeWind** is the magic bridge. It lets you write Tailwind classes, and under the hood, it converts them into React Native \`StyleSheet\` code!
+
+## Pros of NativeWind
+- **Zero Context Switching**: If your team builds websites with Tailwind, they can instantly build Mobile apps without learning a new styling system.
+- **Speed**: Type \`flex-1 items-center justify-center\` instead of writing a clunky StyleSheet object at the bottom of the file.
+- **Universal Apps**: Perfect if you use Expo Router to build true Cross-Platform apps (iOS, Android, AND Web simultaneously).
+
+## Cons of NativeWind
+- **Not 100% Web CSS**: Mobile UI engines aren't browsers. Complex web classes like complex \`grid\`, \`:hover\` on mobile, or advanced CSS interactions might behave weirdly.
+- **Setup Overhead**: Requires configuring Babel and Metro, which can sometimes break during package upgrades.
+
+## Recommendation
+If your goal is to build fast, or if you already know Tailwind from Next.js/React web, **use NativeWind**. It is the modern standard endorsed by Expo to accelerate development.`,
+        contentTh: `# NativeWind vs Tailwind CSS
+
+## มันต่างกันยังไง?
+**Tailwind CSS (ต้นตำรับ)** ถูกออกแบบมาสำหรับทำเว็บ (HTML/CSS) เราไม่สามารถเอามันมายัดใส่ \`<View>\` ของมือถือตรงๆ ได้ เพราะเอนจินมือถือไม่รู้จัก CSS ฝั่งเว็บ
+**NativeWind** คือ "สะพานเชื่อมเวทมนตร์" ครับ มันยอมให้เราพิมพ์คลาสแบบ Tailwind ลงไปได้เลย แล้วหลังบ้านมันจะแอบแปลงคลาสพวกนั้นให้กลายเป็น \`StyleSheet\` ของ React Native โดยอัตโนมัติ
+
+## ข้อดีของ NativeWind (Pros)
+- **เรียนรอบเดียว ใช้ได้ยันมือถือ**: ถ้าคุณทำเว็บด้วย Tailwind เป็นอยู่แล้ว คุณสามารถมาทำแอปมือถือได้เลยโดยแทบไม่ต้องเรียนรู้วิธีแต่ง UI ใหม่
+- **โค้ดสั้นและเร็ว**: การพิมพ์ \`className="flex-1 items-center justify-center"\` นั้นเร็วกว่าการต้องเลื่อนลงไปล่างสุดเพื่อเขียน \`StyleSheet.create({...})\` เยอะมากครับ
+- **เหมาะกับ Universal Apps**: ถ้าคุณทำโปรเจกต์ที่รันทั้ง Web, iOS, Android ด้วยโค้ดชุดเดียวกัน NativeWind คือพระเอกเลยครับ
+
+## ข้อเสียและการพึงระวัง (Cons)
+- **รันคลาสได้ไม่ครบ 100%**: เอนจินมือถือไม่ใช่เบราว์เซอร์ คลาสเว็บซับซ้อนบางตัว (เช่น \`grid\` ขั้นสูง, การทำ \`:hover\` บนมือถือ, หรือ CSS Tricks ประหลาดๆ) อาจจะทำงานไม่ได้ หรือพัง
+- **จุกจิกตอน Setup ต้นโปรเจกต์**: ต้องมีการตั้งค่า Babel/Metro บ่อยครั้งเวลามีอัปเดตเวอร์ชันอาจจะเจอบั๊กแปลกๆ ได้
+
+## สรุป: ควรใช้อะไรดี?
+ถ้าคุณเน้น **ความเร็วในการสร้างแอป (Velocity)** และคุ้นเคยกับ Tailwind มาก่อน **"แนะนำให้จัด NativeWind ได้เลยครับ!"** ปัจจุบัน Expo (ผู้สร้าง React Native framework) ก็เชียร์ให้ใช้ตัวนี้เป็นมาตรฐานใหม่ในการทำแอปแล้วครับ`,
+        codeExamples: [
+          {
+            title: 'NativeWind Usage',
+            language: 'tsx',
+            code: `import { View, Text, Pressable } from 'react-native';
+
+export function NativeWindExample() {
+  return (
+    // 1. "flex-1": Takes up whole screen
+    // 2. "bg-slate-900": Dark background
+    // 3. "items-center justify-center": Centers children
+    <View className="flex-1 bg-slate-900 justify-center items-center px-4">
+      
+      {/* Text sizing and coloring */}
+      <Text className="text-3xl font-extrabold text-white mb-2">
+        Welcome to NativeWind
+      </Text>
+      
+      {/* Gray muted text */}
+      <Text className="text-base text-slate-400 text-center mb-8">
+        Style your app instantly without writing a single line of StyleSheet.
+      </Text>
+
+      {/* Button with touch-feedback via active: opacity */}
+      <Pressable className="w-full bg-indigo-500 active:bg-indigo-600 p-4 rounded-xl items-center shadow-lg shadow-indigo-500/30">
+        <Text className="text-white font-semibold text-lg">Get Started</Text>
+      </Pressable>
+      
     </View>
   );
 }`
