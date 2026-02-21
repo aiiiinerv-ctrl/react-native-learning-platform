@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useI18n } from '@/i18n/I18nProvider';
 import { useAuth } from '@/context/AuthContext';
+import { useTheme } from '@/context/ThemeContext';
 import AuthButton from './AuthButton';
 import NotificationBell from './NotificationBell';
 
@@ -10,6 +11,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const { t, toggleLocale } = useI18n();
   const { isAdmin } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   const links = [
     { href: '/', label: t.nav.home },
@@ -43,6 +45,11 @@ export default function Navbar() {
         <li>
           <button className="lang-toggle" onClick={toggleLocale}>
             {t.nav.language}
+          </button>
+        </li>
+        <li>
+          <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle Theme" style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', padding: '0 8px', color: 'var(--text-primary)' }}>
+            {theme === 'dark' ? '☀️' : '🌙'}
           </button>
         </li>
         <li>
