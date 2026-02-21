@@ -143,6 +143,48 @@ xcode-select --install
 For the most up-to-date and detailed instructions on how to install all dependencies for both iOS and Android (including Java, Android Studio, Watchman, etc.), please follow the official guide:
 🔗 [**React Native Environment Setup Guide**](https://reactnative.dev/docs/environment-setup)
 
+## Project Installation & Setup
+Once your environment is ready, follow these steps to set up the project:
+
+### 1. Clone the Repository
+\`\`\`bash
+git clone https://github.com/your-repo/project-name.git
+cd project-name
+\`\`\`
+
+### 2. Install Dependencies
+Make sure you are in the project root directory, then run:
+\`\`\`bash
+npm install
+# or
+yarn install
+\`\`\`
+
+### 3. Environment Variables (.env) Setup
+Most projects use a \`.env\` file for API keys and configuration.
+1. Copy the example environment file:
+   \`\`\`bash
+   cp .env.example .env
+   \`\`\`
+2. Open the newly created \`.env\` file and fill in your specific variables (e.g., \`API_URL\`, \`FIREBASE_API_KEY\`).
+
+### 4. iOS Pod Installation (macOS only)
+If you are developing for iOS, you must install the CocoaPods dependencies:
+\`\`\`bash
+cd ios
+pod install
+cd ..
+\`\`\`
+
+## Run the Application
+\`\`\`bash
+# For iOS
+npx react-native run-ios
+
+# For Android
+npx react-native run-android
+\`\`\`
+
 ## Android Setup
 \`\`\`bash
 # Install Android Studio
@@ -181,6 +223,48 @@ xcode-select --install
 ## คู่มือติดตั้ง React Native (Official Guide)
 สำหรับวิธีติดตั้ง dependencies ทั้งหมดอย่างละเอียด (เช่น Java, Android Studio, Watchman) แนะนำให้อ้างอิงจากคู่มือหลักของ React Native เพราะมีการอัปเดตตลอดเวลาครับ:
 🔗 [**React Native Environment Setup Guide**](https://reactnative.dev/docs/environment-setup)
+
+## ขั้นตอนการติดตั้งโปรเจ็กต์ (Project Setup)
+เมื่อเตรียมสภาพแวดล้อมพร้อมแล้ว ให้ทำตามขั้นตอนต่อไปนี้เพื่อเปิดโปรเจ็กต์:
+
+### 1. Clone โปรเจ็กต์
+\`\`\`bash
+git clone https://github.com/your-repo/project-name.git
+cd project-name
+\`\`\`
+
+### 2. ติดตั้ง Dependencies
+ตรวจสอบว่าอยู่ในโฟลเดอร์หลักของโปรเจ็กต์ แล้วรันคำสั่ง:
+\`\`\`bash
+npm install
+# หรือ
+yarn install
+\`\`\`
+
+### 3. การตั้งค่า Environment Variables (.env)
+โปรเจ็กต์ส่วนใหญ่มักจะใช้ไฟล์ \`.env\` เพื่อเก็บค่า config หรือ API Keys
+1. คัดลอกไฟล์ตัวอย่าง:
+   \`\`\`bash
+   cp .env.example .env
+   \`\`\`
+2. เปิดไฟล์ \`.env\` ที่เพิ่งสร้างขึ้นมา และกรอกข้อมูลที่จำเป็นลงไป (เช่น \`API_URL\`, \`FIREBASE_API_KEY\`)
+
+### 4. ติดตั้ง iOS Pods (เฉพาะ macOS)
+หากคุณต้องการรันบน iOS จะต้องติดตั้ง CocoaPods dependencies ด้วย:
+\`\`\`bash
+cd ios
+pod install
+cd ..
+\`\`\`
+
+## ทดสอบรันแอปพลิเคชัน
+\`\`\`bash
+# สำหรับ iOS
+npx react-native run-ios
+
+# สำหรับ Android
+npx react-native run-android
+\`\`\`
 
 ## ตั้งค่า Android
 \`\`\`bash
