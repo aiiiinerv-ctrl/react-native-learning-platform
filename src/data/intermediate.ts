@@ -10,32 +10,90 @@ export const intermediateModules: Module[] = [
     lessons: [
       {
         id: 'i01-context',
-        titleEn: 'State Management with Context API',
-        titleTh: 'จัดการ State ด้วย Context API',
-        descriptionEn: 'Built-in React state sharing across components',
-        descriptionTh: 'แชร์ State ข้ามComponent ด้วย Context API ที่มีในตัว',
-        sdkVersion: '0.76', lastUpdated: '2026-01-20',
-        contentEn: `# Context API\n\nContext provides a way to pass data through the component tree without manually passing props at every level.\n\n## When to Use\n- Theme data\n- User authentication state\n- Locale/language preferences\n- Small to medium-sized apps`,
-        contentTh: `# Context API\n\nContext ช่วยส่งข้อมูลผ่าน component tree โดยไม่ต้องส่ง props ทุกระดับ\n\n## ใช้เมื่อไหร่\n- ข้อมูล Theme\n- สถานะ Authentication\n- การตั้งค่าภาษา\n- แอปขนาดเล็กถึงกลาง`,
+        titleEn: 'Component State vs Global State',
+        titleTh: 'State ใน Component vs State ระดับแอป',
+        descriptionEn: 'When to use useState versus Zustand/Context',
+        descriptionTh: 'เมื่อไหร่ควรใช้ useState และเมื่อไหร่ควรใช้ Zustand',
+        sdkVersion: '0.76', lastUpdated: '2026-02-01',
+        contentEn: `# State Management Strategy
+
+In React Native, you don't need Global State for everything! 
+If you put all your data in Zustand or Redux, your app becomes messy.
+
+## The Rule of Thumb
+1. **Local State (\`useState\`)**: Use for UI toggles, form inputs, or things only *one screen* cares about.
+2. **Global State (\`Zustand\`)**: Use for user sessions, light/dark mode, or settings that *multiple screens* need to share.
+3. **Server State (\`React Query\`)**: Use for data fetched from an API (we will learn this next!).`,
+        contentTh: `# กลยุทธ์การจัดการ State
+
+ใน React Native เราไม่จำเป็นต้องใช้ Global State กับทุกเรื่อง!
+ถ้าเราเอาข้อมูลทุกอย่างไปยัดไว้ใน Zustand หรือ Redux แอปจะรกและดูแลยากมาก
+
+## หลักการจำง่ายๆ
+1. **Local State (\`useState\`)**: ใช้กับสิ่งที่มีผลแค่ในหน้าจอนั้นหน้าเดียว (เช่น กรอกฟอร์ม, เปิด/ปิด Popup)
+2. **Global State (\`Zustand\`)**: ใช้กับข้อมูลที่หลายๆ หน้าจอต้องทำงานร่วมกัน (เช่น ข้อมูล User ที่ Login, โหมดมืด/สว่าง)
+3. **Server State (\`React Query\`)**: ใช้กับข้อมูลที่ต้องดึงมาจากอินเทอร์เน็ตผ่าน API (เดี๋ยวเราจะได้เรียนในบทถัดไป!)`,
         codeExamples: [{
-          title: 'Context Provider',
+          title: 'Local vs Global Rules',
           language: 'tsx',
-          code: `import { createContext, useContext, useState, ReactNode } from 'react';\n\ninterface AuthContextType {\n  user: string | null;\n  login: (name: string) => void;\n  logout: () => void;\n}\n\nconst AuthContext = createContext<AuthContextType | undefined>(undefined);\n\nexport function AuthProvider({ children }: { children: ReactNode }) {\n  const [user, setUser] = useState<string | null>(null);\n  return (\n    <AuthContext.Provider value={{ user, login: setUser, logout: () => setUser(null) }}>\n      {children}\n    </AuthContext.Provider>\n  );\n}\n\nexport const useAuth = () => {\n  const ctx = useContext(AuthContext);\n  if (!ctx) throw new Error('useAuth must be used within AuthProvider');\n  return ctx;\n};`
+          code: `// ❌ Wrong: Using Global State for a simple popup toggle
+const useStore = create(set => ({ isModalOpen: false, toggle: () => set(s => ({ isModalOpen: !s.isModalOpen })) }));
+
+// ✅ Right: Using Local State for UI only
+export function Screen() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  return <Modal visible={isModalOpen} />;
+}`
         }]
       },
       {
-        id: 'i02-redux',
-        titleEn: 'State Management with Redux Toolkit',
-        titleTh: 'จัดการ State ด้วย Redux Toolkit',
-        descriptionEn: 'Scalable state management with Redux Toolkit',
-        descriptionTh: 'จัดการ State แบบ scalable ด้วย Redux Toolkit',
-        sdkVersion: '0.76', lastUpdated: '2026-01-25',
-        contentEn: `# Redux Toolkit\n\nRedux Toolkit (RTK) is the official, recommended way to write Redux logic.\n\n## Key Concepts\n- **Store**: Single source of truth\n- **Slice**: Reducer + actions in one\n- **createAsyncThunk**: Handle async operations\n- **RTK Query**: Data fetching and caching`,
-        contentTh: `# Redux Toolkit\n\nRedux Toolkit (RTK) เป็นวิธีที่แนะนำอย่างเป็นทางการในการเขียน Redux\n\n## แนวคิดหลัก\n- **Store**: แหล่งข้อมูลเดียว\n- **Slice**: Reducer + actions ในที่เดียว\n- **createAsyncThunk**: จัดการ async operations\n- **RTK Query**: ดึงข้อมูลและ caching`,
+        id: 'i02-query',
+        titleEn: 'Data Fetching (React Query)',
+        titleTh: 'การดึงข้อมูล (React Query)',
+        descriptionEn: 'Professional data fetching and caching',
+        descriptionTh: 'มาตรฐานการดึงข้อมูลและการทำ Caching ระดับโปร',
+        sdkVersion: '0.76', lastUpdated: '2026-02-01',
+        contentEn: `# TanStack React Query 🔥
+
+## Please Stop using \`useEffect\` for APIs!
+Fetching data using \`useEffect\` and \`useState\` causes many bugs (race conditions, memory leaks, no caching). Modern companies use **React Query**.
+
+## Why React Query?
+- **Auto Caching**: It remembers data. If you change screens and come back, the data shows instantly!
+- **Auto Loading/Error States**: No need to write \`const [loading, setLoading] = useState(false)\` ever again.
+- **Auto Refetching**: It can automatically fetch new data when the user focuses the screen again.`,
+        contentTh: `# TanStack React Query 🔥
+
+## เลิกใช้ \`useEffect\` ดึงข้อมูลจาก API เถอะครับ!
+การใช้ \`useEffect\` คู่กับ \`useState\` เพื่อดึงข้อมูล มักจะทำให้เกิดบั๊กมากมาย (เช่น โหลดข้อมูลซ้ำซ้อน, โหลดช้า, ไม่มีระบบจำข้อมูล) ปัจจุบันบริษัทชั้นนำหันมาใช้ **React Query** กันหมดแล้ว
+
+## ทำไมต้อง React Query?
+- **มีระบบ Cache อัตโนมัติ**: มันจะจำข้อมูลเดิมไว้ให้ สมมติเรากดเปลี่ยนหน้าแล้วกลับมา หน้าจอจะโชว์ข้อมูลทันทีโดยไม่ต้องรอโหลดใหม่!
+- **จัดการสถานะ Loading/Error ให้เอง**: ลาก่อน \`const [loading, setLoading] = useState(false)\`
+- **ดึงข้อมูลใหม่ให้อัตโนมัติ**: เมื่อผู้ใช้สลับแอปไปมา มันสามารถรีเฟรชข้อมูลให้เป็นตัวล่าสุดได้เอง`,
         codeExamples: [{
-          title: 'Redux Slice',
-          language: 'typescript',
-          code: `import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';\n\nexport const fetchTodos = createAsyncThunk('todos/fetch', async () => {\n  const res = await fetch('/api/todos');\n  return res.json();\n});\n\nconst todosSlice = createSlice({\n  name: 'todos',\n  initialState: { items: [], loading: false },\n  reducers: {\n    addTodo: (state, action) => { state.items.push(action.payload); },\n  },\n  extraReducers: (builder) => {\n    builder\n      .addCase(fetchTodos.pending, (state) => { state.loading = true; })\n      .addCase(fetchTodos.fulfilled, (state, action) => {\n        state.loading = false;\n        state.items = action.payload;\n      });\n  },\n});\n\nexport const { addTodo } = todosSlice.actions;\nexport default todosSlice.reducer;`
+          title: 'React Query Example',
+          language: 'tsx',
+          code: `import { useQuery } from '@tanstack/react-query';
+import { View, Text, ActivityIndicator } from 'react-native';
+
+const fetchUser = async () => {
+  const res = await fetch('https://api.example.com/user');
+  return res.json();
+};
+
+export function UserProfile() {
+  // It gives you data, isLoading, and isError instantly!
+  const { data, isLoading, isError } = useQuery({ 
+    queryKey: ['user'], 
+    queryFn: fetchUser 
+  });
+
+  if (isLoading) return <ActivityIndicator />;
+  if (isError) return <Text>Failed to load!</Text>;
+
+  return <Text>Hello, {data.name}!</Text>;
+}`
         }]
       },
       {
@@ -102,18 +160,48 @@ export const intermediateModules: Module[] = [
     descriptionTh: 'การจัดเก็บข้อมูล, API integration และ forms',
     lessons: [
       {
-        id: 'i06-asyncstorage',
-        titleEn: 'Data Persistence with AsyncStorage',
-        titleTh: 'จัดเก็บข้อมูลด้วย AsyncStorage',
-        descriptionEn: 'Local data storage with AsyncStorage',
-        descriptionTh: 'จัดเก็บข้อมูลในเครื่องด้วย AsyncStorage',
+        id: 'i06-reanimated',
+        titleEn: 'Advanced Animations (Reanimated & Moti)',
+        titleTh: 'แอนิเมชันขั้นสูง (Reanimated และ Moti)',
+        descriptionEn: 'Create 60FPS fluid animations without blocking the UI thread',
+        descriptionTh: 'สร้างแอนิเมชัน 60FPS ที่ลื่นไหลโดยไม่กระตุก',
         sdkVersion: '0.76', lastUpdated: '2026-02-01',
-        contentEn: `# AsyncStorage\n\nAsyncStorage is a simple, unencrypted, asynchronous key-value storage.\n\n## Alternatives\n- **MMKV**: Faster, synchronous, encrypted\n- **WatermelonDB**: For complex relational data\n- **SQLite**: SQL database`,
-        contentTh: `# AsyncStorage\n\nAsyncStorage เป็น key-value storage แบบ async ที่เรียบง่าย\n\n## ทางเลือก\n- **MMKV**: เร็วกว่า sync encrypted\n- **WatermelonDB**: สำหรับข้อมูล relational ซับซ้อน\n- **SQLite**: SQL database`,
+        contentEn: `# React Native Reanimated
+
+React Native's built-in \`Animated\` library is okay, but for complex, fluid animations, **Reanimated** is the gold standard.
+It runs animations entirely on the UI thread, meaning even if your JavaScript is doing heavy calculations, your animations won't skip a frame (60 FPS or 120 FPS!).
+
+## Enter Moti 🚀
+Writing pure Reanimated code can be complex. **Moti** is a library built on top of Reanimated that makes it as easy as Framer Motion on the web.`,
+        contentTh: `# React Native Reanimated
+
+ไลบรารี \`Animated\` ที่มีมาให้ใน React Native นั้นพอใช้ได้ แต่สำหรับแอนิเมชันที่ซับซ้อนและลื่นไหล **Reanimated** ถือเป็นมาตรฐานทองคำเลยครับ
+มันทำงานบน UI thread 100% ซึ่งหมายความว่าต่อให้ฝั่ง JavaScript ของเรากำลังประมวลผลหนักแค่ไหน แอนิเมชันบนจอก็จะไม่ค้างหรือกระตุกเลย (วิ่งเต็ม 60 FPS ขึ้นไป)
+
+## รู้จักกับ Moti 🚀
+การเขียน Reanimated เพียวๆ อาจจะเขียนยากไปนิด **Moti** จึงเป็นไลบรารีเสริมตัวยอดฮิตที่ทำให้เราเขียนแอนิเมชันได้ง่ายเหมือนฝั่งเว็บ (Framer Motion)`,
         codeExamples: [{
-          title: 'AsyncStorage Usage',
-          language: 'typescript',
-          code: `import AsyncStorage from '@react-native-async-storage/async-storage';\n\n// Save data\nawait AsyncStorage.setItem('user', JSON.stringify({ name: 'John' }));\n\n// Read data\nconst raw = await AsyncStorage.getItem('user');\nconst user = raw ? JSON.parse(raw) : null;\n\n// Remove data\nawait AsyncStorage.removeItem('user');`
+          title: 'Simple Animation with Moti',
+          language: 'tsx',
+          code: `import { View } from 'react-native';
+import { MotiView } from 'moti';
+
+export function BouncingBox() {
+  return (
+    <View className="flex-1 items-center justify-center">
+      <MotiView
+        from={{ opacity: 0, scale: 0.5, translateY: 100 }}
+        animate={{ opacity: 1, scale: 1, translateY: 0 }}
+        transition={{
+          type: 'spring',
+          damping: 10,
+          stiffness: 100,
+        }}
+        className="w-32 h-32 bg-purple-500 rounded-xl"
+      />
+    </View>
+  );
+}`
         }]
       },
       {

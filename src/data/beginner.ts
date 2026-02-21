@@ -18,72 +18,57 @@ export const beginnerModules: Module[] = [
         lastUpdated: '2026-01-15',
         contentEn: `# Introduction to React Native & Expo
 
-React Native is a framework by Meta that lets you build native mobile apps using JavaScript and React. With React Native, you write components in JSX that map to native platform views.
-
 ## What is React Native?
-- **Cross-platform**: Write once, run on iOS and Android
-- **Native performance**: Components compile to native views
-- **Hot reloading**: See changes instantly during development
-- **Large ecosystem**: Thousands of libraries available
+Imagine building a house. Instead of learning two completely different ways to build a house for Android and iOS, React Native lets you use **JavaScript and React** to build both at the same time!
+React Native takes your JavaScript code and translates it into real, native mobile elements (like a real iOS Button or an Android Text field).
+
+- **Cross-platform**: Write once, run everywhere (iOS and Android).
+- **Native performance**: It doesn't just look like an app; it *is* a real app.
+- **Hot reloading**: When you hit save, the app updates instantly on your screen—no waiting!
 
 ## What is Expo?
-Expo is a platform built on top of React Native that provides:
-- **Expo CLI**: Quick project scaffolding
-- **Expo Go**: Test on device without native builds
-- **EAS (Expo Application Services)**: Cloud builds and submissions
-- **Managed workflow**: No need to touch native code initially
+If React Native is the engine of a car, **Expo** is the entire factory that helps you build, test, and ship the car faster. It provides tools so you don't have to touch complex native code (like Java or Swift) right away.
+- **Expo Go**: An app on your phone that lets you test your code instantly by scanning a QR code.
+- **Expo Router**: Makes navigating between screens as easy as organizing folders on your computer.
 
 ## Getting Started
 \`\`\`bash
-# Install Expo CLI globally
-npm install -g expo-cli
-
-# Create a new project
+# Create a new project (the easiest way!)
 npx create-expo-app@latest MyApp
 cd MyApp
 
-# Start development server
+# Start the development server
 npx expo start
 \`\`\`
 
-## Project Structure (Expo)
-\`\`\`
-MyApp/
-├── app/              # File-based routing (Expo Router)
-│   ├── _layout.tsx   # Root layout
-│   ├── index.tsx     # Home screen
-│   └── about.tsx     # About screen
-├── assets/           # Images, fonts, etc.
-├── components/       # Reusable components
-├── constants/        # App constants
-├── package.json
-├── tsconfig.json
-└── app.json          # Expo configuration
-\`\`\``,
+## Popular Libraries You Will Learn
+Unlike traditional courses that only teach the difficult "built-in" tools, we will teach you what real companies use:
+1. **NativeWind**: Styling your app easily (like Tailwind CSS).
+2. **React Hook Form**: Making forms simple without messy state variables.
+3. **Zustand**: Remembering data across the app easily.
+4. **React Query**: Fetching data from the internet the smart way.`,
         contentTh: `# แนะนำ React Native และ Expo
 
-React Native เป็นเฟรมเวิร์กโดย Meta ที่ช่วยให้สร้างแอปมือถือแบบ native ด้วย JavaScript และ React โดยเขียน component ใน JSX ที่จะถูกแปลงเป็น native views
-
 ## React Native คืออะไร?
-- **Cross-platform**: เขียนครั้งเดียว รันได้ทั้ง iOS และ Android
-- **ประสิทธิภาพระดับ Native**: Component ถูก compile เป็น native views
-- **Hot reloading**: เห็นการเปลี่ยนแปลงทันทีขณะพัฒนา
-- **Ecosystem ขนาดใหญ่**: มีไลบรารีนับพันให้ใช้
+ลองนึกภาพการสร้างบ้าน แทนที่จะต้องเรียนรู้วิธีสร้างบ้านแยกกันระหว่าง Android (ใช้ Java/Kotlin) และ iOS (ใช้ Swift) React Native ช่วยให้เราใช้ **JavaScript และ React** ในการสร้างแอปทั้งสองระบบได้พร้อมกัน!
+
+React Native จะทำหน้าที่แปล (Translate) โค้ด JavaScript ของเราให้กลายเป็นหน้าตาแอปของแท้ๆ ของทั้ง iOS และ Android
+
+- **Cross-platform**: เขียนครั้งเดียว สั่งรันได้ทุกระบบ
+- **ประสิทธิภาพระดับ Native**: ไม่ใช่แค่แอปจำลอง แต่เป็นแอปของจริง
+- **Hot reloading**: พอเรากด Save โค้ด หน้าตาแอปในมือถือจะเปลี่ยนตามทันที ไม่ต้องรอนาน!
 
 ## Expo คืออะไร?
-Expo เป็นแพลตฟอร์มที่สร้างบน React Native ประกอบด้วย:
-- **Expo CLI**: สร้างโปรเจ็กต์อย่างรวดเร็ว
-- **Expo Go**: ทดสอบบนอุปกรณ์จริงโดยไม่ต้อง build native
-- **EAS**: บริการ build และ submit บน cloud
-- **Managed workflow**: ไม่ต้องแตะ native code ในตอนแรก
+ถ้า React Native คือเครื่องยนต์ของรถ **Expo** ก็คือโรงงานประกอบรถยนต์ ที่มีเครื่องมือช่วยให้เราสร้าง, ทดสอบ, และปล่อยแอปได้ไวขึ้น โดยที่เราไม่ต้องไปแตะโค้ดภาษา Native ยากๆ เลยในตอนเริ่มต้น
+- **Expo Go**: แอปบนมือถือที่ให้เราสแกน QR Code แล้วเห็นแอปที่เรากำลังเขียนได้ทันที
+- **Expo Router**: ช่วยให้การเปลี่ยนหน้าไปมา (Navigation) ง่ายเหมือนแค่การจัดโฟลเดอร์ในคอมพิวเตอร์
 
-## เริ่มต้น
-\`\`\`bash
-npm install -g expo-cli
-npx create-expo-app@latest MyApp
-cd MyApp
-npx expo start
-\`\`\``,
+## เครื่องมือยอดนิยม (Libraries) ที่เราจะเน้นสอน
+ในหลักสูตรนี้ เราจะไม่สอนแค่ของพื้นฐานที่เขียนยากๆ แต่เราจะสอนเครื่องมือที่ **บริษัทจริงๆ เค้าใช้กัน** เพื่อให้ชีวิตง่ายขึ้น:
+1. **NativeWind**: ตกแต่งความสวยงามให้แอปอย่างง่ายดาย (คล้าย Tailwind CSS)
+2. **React Hook Form**: จัดการแบบฟอร์ม (Form) ให้ง่าย ไม่ต้องเขียนโค้ดเยอะ
+3. **Zustand**: ระบบความจำของแอป (State Management) ที่เข้าใจง่ายสุดๆ
+4. **React Query**: ดึงข้อมูลจากอินเทอร์เน็ตแบบมืออาชีพ`,
         codeExamples: [
           {
             title: 'Basic App.tsx',
@@ -366,42 +351,44 @@ export type { User, AuthState } from './types';`
         descriptionTh: 'ใช้งานรูปแบบ Model-View-ViewModel',
         sdkVersion: '0.76',
         lastUpdated: '2026-01-20',
-        contentEn: `# MVVM Pattern in React Native
+        contentEn: `# MVVM Architecture Pattern
+*(Wait, don't let the big words scare you!)*
+
+In programming, we need a way to organize our messy code. If we put everything in one file, it becomes a nightmare to read.
 
 ## What is MVVM?
-**Model-View-ViewModel** separates concerns into three layers:
-- **Model**: Data and business logic
-- **View**: UI components (React components)  
-- **ViewModel**: Bridge between Model and View (custom hooks)
+Think of a Restaurant:
+1. **Model (The Kitchen/Ingredients)**: This is your data. Where does the data come from? (e.g., fetching a User profile from the internet).
+2. **View (The Dining Area)**: What the user sees. Buttons, Text, Images. In React Native, this is your \`return ( <View>... </View> )\`.
+3. **ViewModel (The Waiter)**: The bridge! The waiter takes your order (button click) from the View, goes to the Kitchen (Model), grabs the food (Data), and brings it back to your table (View).
 
-## Structure
-\`\`\`
-feature/
-├── models/        # Data types and API calls
-├── viewmodels/    # Custom hooks with business logic
-├── views/         # React Native components
-└── index.ts
-\`\`\`
+## How we do this in React Native
+React Native handles MVVM perfectly using **Custom Hooks**.
 
-## Implementation
-In React Native, MVVM maps naturally:
-- **Model** → TypeScript interfaces + API service classes
-- **ViewModel** → Custom hooks (useState, useEffect, useReducer)
-- **View** → Functional components
+- **Model**: Regular TypeScript functions that fetch data (e.g., \`fetchUser()\`)
+- **ViewModel**: A custom Hook (e.g., \`useUser()\`) that calls the API and holds the loading state.
+- **View**: Your clean React Component that just displays whatever the Hook gives it!
 
-This pattern creates testable, maintainable code with clear separation of concerns.`,
-        contentTh: `# รูปแบบ MVVM ใน React Native
+By using this, your View (UI) is purely focused on looking pretty, and your ViewModel handles all the complex logic.`,
+        contentTh: `# รูปแบบสถาปัตยกรรม MVVM
+*(เดี๋ยวก่อน! อย่าเพิ่งกลัวชื่อแปลกๆ นี้เลยครับ)*
+
+ในการเขียนโปรแกรม เราต้องมีวิธีจัดระเบียบโค้ดที่รกรุงรัง ถ้าเรายัดทุกอย่างไว้ในไฟล์เดียว เวลาจะกลับมาแก้บอกเลยว่านรกแตก!
 
 ## MVVM คืออะไร?
-**Model-View-ViewModel** แยก concern ออกเป็น 3 ชั้น:
-- **Model**: ข้อมูลและ business logic
-- **View**: UI components (React components)
-- **ViewModel**: สะพานเชื่อม Model กับ View (custom hooks)
+ให้ลองจินตนาการถึง **ร้านอาหาร**:
+1. **Model (ห้องครัว/วัตถุดิบ)**: นี่คือ "ข้อมูล" ของเรา ข้อมูลนี้มาจากไหน? (เช่น ดึงข้อมูลโปรไฟล์ผู้ใช้มาจากอินเทอร์เน็ต)
+2. **View (โซนสำหรับลูกค้านั่งกิน)**: คือสิ่งที่ผู้ใช้งานมองเห็นบนหน้าจอ ปุ่ม, ข้อความ, รูปภาพ ในรหัส React หน้าตาก็คือส่วนที่เป็น \`return ( <View>... </View> )\`
+3. **ViewModel (พนักงานเสิร์ฟ)**: เป็นสะพานเชื่อม! พนักงานจะรับออเดอร์ (เมื่อผู้ใช้กดปุ่ม) จากโต๊ะ (View) เดินไปสั่งอาหารที่ครัว (Model) รอรับอาหาร (ข้อมูล) และเดินนำมาเสิร์ฟที่โต๊ะให้ลูกค้า (View)
 
-ใน React Native, MVVM แมปได้อย่างเป็นธรรมชาติ:
-- **Model** → TypeScript interfaces + API service classes
-- **ViewModel** → Custom hooks
-- **View** → Functional components`,
+## การใช้ MVVM ใน React Native
+React Native เหมาะกับ MVVM มากๆ โดยเราจะใช้ฟีเจอร์ที่เรียกว่า **Custom Hooks**
+
+- **Model**: ฟังก์ชันปกติที่ไปดึงข้อมูลมา (เช่น \`fetchUser()\`)
+- **ViewModel**: Custom Hook ของเรา (เช่น \`useUser()\`) ที่ทำหน้าที่ดึงข้อมูล และจำสถานะกำลังโหลดเอาไว้
+- **View**: Component ที่สะอาดตา มีหน้าที่แค่เอาข้อมูลจากพนักงานเสิร์ฟมาแสดงผลให้สวยงาม!
+
+วิธีนี้ทำให้โค้ดที่ดูแลหน้าตาแอป (UI) สะอาดมาก เพราะไม่ต้องมาเขียนลอจิกซับซ้อนปนลงไปครับ`,
         codeExamples: [
           {
             title: 'MVVM Example - Model',
@@ -484,54 +471,50 @@ export function UserScreen({ userId }: { userId: string }) {
         descriptionTh: 'ใช้งานรูปแบบ Model-View-Controller',
         sdkVersion: '0.76',
         lastUpdated: '2026-01-20',
-        contentEn: `# MVC Pattern in React Native
+        contentEn: `# Modern Architecture: Just Hooks!
 
-## What is MVC?
-**Model-View-Controller** is a classic pattern:
-- **Model**: Data layer
-- **View**: UI layer (components)
-- **Controller**: Handles user actions, updates model
+## Forget old MVC
+If you see tutorials talking about Controllers and MVC (Model-View-Controller) in React Native, **they might be outdated**.
 
-## MVVM vs MVC in React Native
-| Aspect | MVC | MVVM |
-|--------|-----|------|
-| Data flow | Controller → Model → View | View ↔ ViewModel ↔ Model |
-| Testing | Controller testing | Hook testing |
-| React fit | Moderate | Natural |
-| Complexity | Simpler | More structured |
+## The React Way (Component + Hooks)
+Modern React Native focuses on simplicity:
+1. **UI Components**: Dumb, visual-only components.
+2. **Custom Hooks**: Smart logic handlers (our "ViewModels").
+3. **Global State**: For things the whole app needs to know (like "Is the user logged in?"). We use simple tools like \`Zustand\`.
 
-MVVM is generally preferred in React Native because custom hooks naturally serve as ViewModels.`,
-        contentTh: `# รูปแบบ MVC ใน React Native
+Instead of strict OOP (Object-Oriented) classes, we use **Functional Programming**. It's much less code to read and easier to test!`,
+        contentTh: `# สถาปัตยกรรมยุคใหม่: เน้นแค่ Hooks!
 
-## MVC คืออะไร?
-**Model-View-Controller** เป็นรูปแบบคลาสสิก:
-- **Model**: ชั้นข้อมูล
-- **View**: ชั้น UI (components)
-- **Controller**: จัดการ user actions อัพเดต model
+## ลืม MVC แบบเก่าไปได้เลย
+หากคุณไปเจอคอร์สหรือบทความที่สอนเรื่อง Controller และ MVC (Model-View-Controller) ใน React Native บอกเลยว่า **มันอาจจะเก่าไปแล้วสำหรับยุคนี้**
 
-MVVM เหมาะกับ React Native มากกว่าเพราะ custom hooks ทำหน้าที่เป็น ViewModel ได้อย่างเป็นธรรมชาติ`,
+## วิถีแห่ง React (Component + Hooks)
+React Native ยุคใหม่เน้นความเรียบง่าย:
+1. **UI Components**: Component โง่ๆ ที่มีหน้าที่แค่โชว์หน้าตาให้สวยอย่างเดียว
+2. **Custom Hooks**: ตัวจัดการลอจิกฉลาดๆ (คล้ายๆ ViewModel)
+3. **Global State**: สำหรับอะไรที่ทั้งแอปจำเป็นต้องรู้ (เช่น "ผู้ใช้คนนี้ Login หรือยัง?") เราจะใช้เครื่องมือที่เบาและง่ายมากๆ อย่าง \`Zustand\`
+
+แทนที่จะเขียน Class ตามแบบ OOP ที่ซับซ้อน เราเปลี่ยนมาใช้ท่ายอดฮิตอย่าง **Functional Programming** แทน ซึ่งโค้ดสั้นกว่า อ่านง่ายกว่า และทดสอบง่ายกว่าเยอะ!`,
         codeExamples: [
           {
-            title: 'MVC Controller',
-            language: 'typescript',
-            code: `// controllers/userController.ts
-import { User } from '../models/User';
+            title: 'Modern Pattern (Zustand + Hooks)',
+            language: 'tsx',
+            code: `// 1. Global State (Zustand) - Easy memory!
+import { create } from 'zustand';
 
-class UserController {
-  private listeners: ((user: User) => void)[] = [];
+const useAuthStore = create((set) => ({
+  user: null,
+  login: (userData) => set({ user: userData }),
+  logout: () => set({ user: null }),
+}));
 
-  subscribe(fn: (user: User) => void) {
-    this.listeners.push(fn);
-  }
-
-  async loadUser(id: string) {
-    const res = await fetch(\`/api/users/\${id}\`);
-    const user = await res.json();
-    this.listeners.forEach(fn => fn(user));
-  }
-}
-
-export const userController = new UserController();`
+// 2. View Component
+export function ProfileScreen() {
+  const user = useAuthStore((state) => state.user);
+  
+  if (!user) return <Text>Please log in!</Text>;
+  return <Text>Welcome, {user.name}!</Text>;
+}`
           }
         ]
       }
@@ -557,44 +540,54 @@ export const userController = new UserController();`
 React Native provides a set of built-in components that map to native views.
 
 ## Essential Components
-- **View** — Container component (like div)
-- **Text** — Display text
-- **Image** — Display images
-- **ScrollView** — Scrollable container
-- **TextInput** — Text input field
-- **TouchableOpacity** — Pressable with opacity feedback
-- **Pressable** — Modern pressable (recommended)`,
+- **View** — Container component (like a \`<div>\` in HTML).
+- **Text** — Used to display text.
+- **Image** — Used to display images.
+- **ScrollView** — A container that allows scrolling when content overflows.
+- **TextInput** — A box where users can type.
+- **Pressable** — Any element you want the user to be able to tap/press.
+
+## The Safe Area Problem (Notches and Home Indicators)
+Modern phones have notches, dynamic islands, and home indicators. If you just use a regular \`<View>\`, your app's header might get hidden behind the iPhone notch! 
+**Solution:** Always use \`SafeAreaView\` from the library \`react-native-safe-area-context\` for your main screens.`,
         contentTh: `# Component หลัก
 
-React Native มี component ในตัวที่แมปกับ native views
+React Native มี component พื้นฐานที่เปรียบเสมือนตัวต่อเลโก้ หน้าที่ของเราคือเอามาประกอบกันให้เป็นหน้าจอแอป
 
-## Component สำคัญ
-- **View** — Container (เหมือน div)
-- **Text** — แสดงข้อความ
-- **Image** — แสดงรูปภาพ
-- **ScrollView** — Container ที่เลื่อนได้
+## Component สำคัญที่ใช้บ่อยสุดๆ
+- **View** — กล่องเปล่าๆ ที่เอาไว้จัด layout (เหมือน \`<div>\` ในการทำเว็บ)
+- **Text** — เอาไว้แสดงข้อความ
+- **Image** — เอาไว้แสดงรูปภาพ
+- **ScrollView** — กล่องที่สามารถเอานิ้วไถเลื่อนขึ้นลงได้
 - **TextInput** — ช่องกรอกข้อความ
-- **Pressable** — component ที่กดได้ (แนะนำ)`,
+- **Pressable** — พื้นที่อะไรก็ตามที่เราอยากให้ผู้ใช้แตะหรือกดได้
+
+## ปัญหาเรื่อง "รอยบาก" (Notch)
+มือถือสมัยใหม่มีรอยบาก (Notch) หรือหน้าจอแหว่ง ถ้าเราใช้แค่ \`<View>\` ธรรมดา เนื้อหาของเราอาจจะทะลุไปซ่อนอยู่ใต้รอยบากได้!
+**คำแนะนำ:** เราควรใช้ \`SafeAreaView\` จากไลบรารี \`react-native-safe-area-context\` เสมอ เพื่อให้เนื้อหาของเราอยู่ในจุดที่ปลอดภัย อ่านได้ชัดเจน`,
         codeExamples: [
           {
-            title: 'Core Components Example',
+            title: 'Core Components + SafeArea',
             language: 'tsx',
             code: `import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export function ProfileCard() {
   return (
-    <View style={styles.card}>
-      <Image source={{ uri: 'https://example.com/avatar.jpg' }} style={styles.avatar} />
-      <Text style={styles.name}>John Doe</Text>
-      <Pressable style={styles.button} onPress={() => console.log('Pressed')}>
-        <Text style={styles.buttonText}>Follow</Text>
-      </Pressable>
-    </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#1a1a2e' }}>
+      <View style={styles.card}>
+        <Image source={{ uri: 'https://example.com/avatar.jpg' }} style={styles.avatar} />
+        <Text style={styles.name}>John Doe</Text>
+        <Pressable style={styles.button} onPress={() => console.log('Pressed')}>
+          <Text style={styles.buttonText}>Follow</Text>
+        </Pressable>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  card: { padding: 16, borderRadius: 12, backgroundColor: '#1a1a2e' },
+  card: { padding: 16, borderRadius: 12, backgroundColor: '#2a2a4e', margin: 16 },
   avatar: { width: 80, height: 80, borderRadius: 40 },
   name: { fontSize: 18, color: '#fff', marginTop: 8 },
   button: { backgroundColor: '#6c63ff', padding: 12, borderRadius: 8, marginTop: 12 },
@@ -626,40 +619,63 @@ const styles = StyleSheet.create({
 
 React Native uses a subset of CSS with Flexbox as the default layout system.
 
-## Key Differences from Web CSS
-- No CSS files — use StyleSheet.create()
-- Properties are camelCase
-- Flexbox is column-direction by default
-- No inheritance (except Text)
-- Units are density-independent pixels`,
+## The Built-in Way (StyleSheet)
+\- No CSS files — you use \`StyleSheet.create()\` inside your JS file.
+\- Properties are \`camelCase\` (e.g., \`backgroundColor\` instead of \`background-color\`).
+\- Flexbox direction is \`column\` by default (unlike web which is \`row\`).
+
+## The Modern Way (NativeWind) 🔥
+Writing \`StyleSheet\` for every component can be slow. Real-world apps often use **NativeWind**, which lets you use **Tailwind CSS** classes directly in React Native!
+
+Instead of writing 10 lines of StyleSheet, you just write:
+\`\`\`tsx
+<Text className="text-xl font-bold text-blue-500">Hello!</Text>
+\`\`\`
+It's much faster, cleaner, and uses the exact same class names as web development.`,
         contentTh: `# Styling และ Flexbox
 
-React Native ใช้ CSS บางส่วน โดย Flexbox เป็นระบบ layout หลัก
+React Native ใช้ CSS ในรูปแบบของตัวเอง โดยใช้ระบบ Flexbox ในการจัดหน้าจอ
 
-## ความแตกต่างจาก Web CSS
-- ไม่มี CSS file — ใช้ StyleSheet.create()
-- Property เป็น camelCase
-- Flexbox เป็น column direction โดยค่าเริ่มต้น
-- ไม่มี inheritance (ยกเว้น Text)`,
+## วิธีดั้งเดิม (StyleSheet)
+\- ไม่มีไฟล์ .css — เราจะเขียนสไตล์ลงในไฟล์ JS/TS เลยโดยใช้ \`StyleSheet.create()\`
+\- ชื่อ Property จะเป็นแบบ \`camelCase\` (เช่น \`backgroundColor\` แทนที่จะเป็น \`background-color\`)
+\- ทิศทางของ Flexbox ค่าเริ่มต้นจะเป็นคอลัมน์แนวตั้ง (\`column\`) ไม่ใช่แนวนอน (\`row\`) เหมือนบนเว็บ
+
+## วิถีสมัยใหม่ (NativeWind) 🔥
+การเขียน \`StyleSheet\` ทีละอันอาจจะทำให้ช้า แอปจริงๆ หลายที่เลยนิยมใช้ **NativeWind** ซึ่งทำให้เราเขียน **Tailwind CSS** ใน React Native ได้เลย!
+
+แทนที่จะต้องมานั่งเขียนสไตล์ยาวเหยียด เราแค่พิมพ์แบบนี้:
+\`\`\`tsx
+<Text className="text-xl font-bold text-blue-500">สวัสดีครับ!</Text>
+\`\`\`
+ทั้งเร็วกว่า โค้ดสั้นกว่า และใช้ชื่อคลาสเหมือนกับการทำเว็บเป๊ะๆ`,
         codeExamples: [
           {
-            title: 'Flexbox Layout',
+            title: 'NativeWind vs StyleSheet',
             language: 'tsx',
-            code: `const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-  },
-  box: {
-    width: 80,
-    height: 80,
-    backgroundColor: '#6c63ff',
-    borderRadius: 8,
-  },
-});`
+            code: `// ❌ The Old Way (StyleSheet)
+import { View, Text, StyleSheet } from 'react-native';
+
+export function OldCard() {
+  return (
+    <View style={styles.card}>
+      <Text style={styles.title}>Hello</Text>
+    </View>
+  );
+}
+const styles = StyleSheet.create({
+  card: { padding: 16, backgroundColor: 'white', borderRadius: 8 },
+  title: { fontSize: 20, fontWeight: 'bold' }
+});
+
+// ✅ The Modern Way (NativeWind)
+export function TailwindCard() {
+  return (
+    <View className="p-4 bg-white rounded-lg">
+      <Text className="text-xl font-bold">Hello</Text>
+    </View>
+  );
+}`
           }
         ]
       },
@@ -717,41 +733,60 @@ export default function App() {
         descriptionTh: 'TextInput, ฟอร์ม และการจัดการคีย์บอร์ด',
         sdkVersion: '0.76',
         lastUpdated: '2026-02-01',
-        contentEn: `# Handling User Input
+        contentEn: `# Handling Forms Like a Pro
 
-## TextInput Basics
-TextInput is the core component for text input in React Native.
+## The Old Way (Manual State)
+If you have a form with 10 inputs, you don't want to create 10 \`useState\` variables. It makes the app slow because every time you type one letter, the *entire screen* re-renders.
 
-## Keyboard Handling
-- KeyboardAvoidingView for iOS
-- android:windowSoftInputMode for Android`,
-        contentTh: `# จัดการ User Input
+## The Modern Way: React Hook Form 🔥
+In the real world, we use a library called **React Hook Form**. 
+It handles all the messy stuff for us:
+- Doesn't slow down your app when you type
+- Built-in error handling (e.g., "Email is required")
+- Less code to write!`,
+        contentTh: `# การจัดการฟอร์มแบบมือโปร
 
-## พื้นฐาน TextInput
-TextInput เป็น component หลักสำหรับรับข้อความ
+## วิธีดั้งเดิม (คุม State เอง)
+ลองคิดดูว่าถ้าหน้าเว็บมี 10 ช่องให้กรอก เราคงไม่อยากสร้าง \`useState\` 10 ตัว เพราะมันจะทำให้แอปช้าลง (ทุกครั้งที่พิมพ์ 1 ตัวอักษร หน้าจอจะถูกโหลดใหม่ทั้งหมด)
 
-## จัดการ Keyboard
-- ใช้ KeyboardAvoidingView สำหรับ iOS
-- android:windowSoftInputMode สำหรับ Android`,
+## วิถีสมัยใหม่: React Hook Form 🔥
+ในการทำงานจริง เราจะใช้ไลบรารีที่ชื่อว่า **React Hook Form** ซึ่งช่วยจัดการเรื่องปวดหัวให้หมด:
+- พิมพ์แล้วแอปไม่กระตุก (No unnecessary re-renders)
+- มีระบบจัดการ Error ในตัว (เช่น "กรุณากรอกอีเมล")
+- เขียนโค้ดน้อยลงมาก!`,
         codeExamples: [
           {
-            title: 'Controlled TextInput',
+            title: 'Forms with React Hook Form',
             language: 'tsx',
-            code: `import { useState } from 'react';
-import { TextInput, View, Text, StyleSheet } from 'react-native';
+            code: `import { useForm, Controller } from 'react-hook-form';
+import { TextInput, View, Text, Pressable } from 'react-native';
 
 export function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { control, handleSubmit, formState: { errors } } = useForm();
+
+  const onSubmit = (data) => console.log(data);
 
   return (
-    <View style={styles.form}>
-      <TextInput style={styles.input} placeholder="Email"
-        value={email} onChangeText={setEmail}
-        keyboardType="email-address" autoCapitalize="none" />
-      <TextInput style={styles.input} placeholder="Password"
-        value={password} onChangeText={setPassword}
-        secureTextEntry />
+    <View className="p-4">
+      {/* Email Input */}
+      <Controller
+        control={control}
+        rules={{ required: 'Email is required!' }}
+        render={({ field: { onChange, value } }) => (
+          <TextInput 
+            className="border p-2 rounded mb-2" 
+            placeholder="Email" 
+            onChangeText={onChange} 
+            value={value} 
+          />
+        )}
+        name="email"
+      />
+      {errors.email && <Text className="text-red-500">{errors.email.message}</Text>}
+
+      <Pressable onPress={handleSubmit(onSubmit)} className="bg-blue-500 p-3 rounded mt-4">
+        <Text className="text-white text-center">Login</Text>
+      </Pressable>
     </View>
   );
 }`
@@ -798,46 +833,63 @@ export function ItemList() {
       },
       {
         id: 'b11-state',
-        titleEn: 'Basic State with useState & useReducer',
-        titleTh: 'State เบื้องต้นด้วย useState และ useReducer',
-        descriptionEn: 'Learn React state management fundamentals',
-        descriptionTh: 'เรียนรู้พื้นฐานการจัดการ State ใน React',
+        titleEn: 'State Management (Zustand)',
+        titleTh: 'การจัดการ State (Zustand)',
+        descriptionEn: 'Learn modern global state management with Zustand',
+        descriptionTh: 'เรียนรู้การจัดการ State ระดับแอปด้วย Zustand',
         sdkVersion: '0.76',
         lastUpdated: '2026-02-01',
-        contentEn: `# Basic State Management
+        contentEn: `# State Management
 
-## useState — Simple state
-For simple values: strings, numbers, booleans, simple objects.
+## What is State?
+Think of State as the **Memory** of your app. If a user clicks "Dark Mode", the app needs to *remember* that choice across all screens.
 
-## useReducer — Complex state
-For complex state logic with multiple sub-values or when next state depends on previous.`,
-        contentTh: `# การจัดการ State เบื้องต้น
+## Why not use Context or Redux?
+- \`useState\` only works inside one screen.
+- \`Context API\` can make your app slow if not used carefully.
+- \`Redux\` is powerful but requires a massive amount of confusing code.
 
-## useState — State อย่างง่าย
-สำหรับค่าง่ายๆ: string, number, boolean, object อย่างง่าย
+## Enter Zustand 🐻
+Zustand is a tiny, fast, and extremely popular library for Global State. It lets you create a "Store" (a global memory box) that any screen can access instantly without wrapping your app in providers!`,
+        contentTh: `# การจัดการ State (ความจำของแอป)
 
-## useReducer — State ที่ซับซ้อน
-สำหรับ state logic ที่ซับซ้อน มีหลาย sub-values`,
+## State คืออะไร?
+ให้คิดว่า State คือ **ความจำ** ของแอป ถ้ายูสเซอร์กดเลือก "โหมดมืด" แอปก็ต้อง *จำ* ให้ได้ว่ายูสเซอร์เลือกโหมดมืดไว้ ไม่ว่าจะเปลี่ยนไปหน้าไหนก็ตาม
+
+## ทำไมไม่ใช้ Context หรือ Redux?
+- \`useState\` จำได้แค่ในหน้าจอของตัวเอง ส่งข้ามหน้าจอยาก
+- \`Context API\` ถ้าใช้ไม่ระวังอาจทำให้แอปกระตุกได้
+- \`Redux\` ทรงพลังมาก แต่เขียนโค้ดยากและยาวเกินจำเป็นสำหรับมือใหม่
+
+## พระเอกของเรา: Zustand 🐻
+Zustand (ซูส-ตานท์) เป็นไลบรารีขนาดเล็ก เร็วปรี๊ด และฮิตมากในตอนนี้ มันช่วยให้เราสร้าง "Store" (กล่องความจำส่วนกลาง) ที่หน้าจอไหนก็ดึงข้อมูลไปใช้ได้ทันทีโดยไม่ต้องตั้งค่าวุ่นวาย!`,
         codeExamples: [
           {
-            title: 'useReducer Example',
+            title: 'Zustand Example',
             language: 'tsx',
-            code: `import { useReducer } from 'react';
+            code: `import { create } from 'zustand';
+import { View, Text, Pressable } from 'react-native';
 
-type State = { count: number; step: number };
-type Action = { type: 'increment' } | { type: 'decrement' } | { type: 'setStep'; payload: number };
+// 1. Create a Store (The Memory Box)
+const useBearStore = create((set) => ({
+  bears: 0,
+  increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
+  removeAllBears: () => set({ bears: 0 }),
+}));
 
-function reducer(state: State, action: Action): State {
-  switch (action.type) {
-    case 'increment': return { ...state, count: state.count + state.step };
-    case 'decrement': return { ...state, count: state.count - state.step };
-    case 'setStep': return { ...state, step: action.payload };
-  }
-}
+// 2. Use it anywhere!
+export function BearCounter() {
+  const bears = useBearStore((state) => state.bears);
+  const increasePopulation = useBearStore((state) => state.increasePopulation);
 
-export function Counter() {
-  const [state, dispatch] = useReducer(reducer, { count: 0, step: 1 });
-  // Use dispatch({ type: 'increment' }) etc.
+  return (
+    <View className="items-center mt-10">
+      <Text className="text-2xl">We have {bears} bears! 🐻</Text>
+      <Pressable onPress={increasePopulation} className="bg-orange-500 p-3 rounded mt-4">
+        <Text className="text-white">+ Add Bear</Text>
+      </Pressable>
+    </View>
+  );
 }`
           }
         ]

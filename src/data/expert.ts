@@ -63,33 +63,94 @@ export const expertModules: Module[] = [
     descriptionTh: 'เพิ่มประสิทธิภาพ bundle, native modules และรูปแบบขั้นสูง',
     lessons: [
       {
-        id: 'e04-bundle',
-        titleEn: 'App Bundle Size Optimization',
-        titleTh: 'เพิ่มประสิทธิภาพขนาด Bundle',
-        descriptionEn: 'Reduce app size for faster downloads',
-        descriptionTh: 'ลดขนาดแอปเพื่อดาวน์โหลดเร็วขึ้น',
+        id: 'e04-mmkv',
+        titleEn: 'Ultra-Fast Storage with MMKV',
+        titleTh: 'เก็บข้อมูลโคตรเร็วด้วย MMKV',
+        descriptionEn: 'Replace slow AsyncStorage with high-performance MMKV',
+        descriptionTh: 'เปลี่ยน AsyncStorage ที่อืดอาดเป็น MMKV ที่เร็วปรื๊ด',
         sdkVersion: '0.76', lastUpdated: '2026-02-10',
-        contentEn: `# Bundle Size Optimization\n\n## Analysis Tools\n- react-native-bundle-visualizer\n- source-map-explorer\n\n## Strategies\n1. Enable Hermes engine\n2. Use ProGuard (Android)\n3. Enable App Thinning (iOS)\n4. Tree-shake unused code\n5. Optimize images (WebP)\n6. Use dynamic imports\n7. Remove unused dependencies`,
-        contentTh: `# เพิ่มประสิทธิภาพขนาด Bundle\n\n## เครื่องมือวิเคราะห์\n- react-native-bundle-visualizer\n- source-map-explorer\n\n## กลยุทธ์\n1. เปิดใช้ Hermes engine\n2. ใช้ ProGuard (Android)\n3. เปิด App Thinning (iOS)\n4. Tree-shake โค้ดที่ไม่ใช้\n5. ลดขนาดรูปภาพ (WebP)\n6. ใช้ dynamic imports\n7. ลบ dependencies ที่ไม่ใช้`,
+        contentEn: `# React Native MMKV ⚡️
+
+If you are building a professional app, you should **stop using AsyncStorage**. It is asynchronous, slow, and can cause UI blockages.
+
+## Meet MMKV
+MMKV is a mobile key-value storage framework developed by WeChat. It is **30x faster than AsyncStorage**!
+- It is fully **synchronous** (no more \`await\`).
+- It encrypts data easily.
+- It is perfect for storing user sessions, theme preferences, or caching simple API responses.`,
+        contentTh: `# React Native MMKV ⚡️
+
+ถ้าคุณกำลังทำแอประดับโปรเฟสชันนัล **เลิกใช้ AsyncStorage ได้แล้วครับ** เนื่อกจากมันทำงานแบบ Asynchronous ซึ่งช้า และบางครั้งก็ทำให้หน้าจอกระตุกได้
+
+## รู้จักกับ MMKV
+MMKV เป็นระบบเก็บข้อมูลที่พัฒนาโดยทีม WeChat ซึ่งทำงานเร็วกว่า AsyncStorage ถึง **30 เท่า!** 
+- มันทำงานแบบ **Synchronous** (ไม่ต้องเขียน \`await\` ให้เมื่อยมือ)
+- รองรับการเข้ารหัสข้อมูล (Encryption) ได้ง่ายๆ
+- เหมาะมากสำหรับเก็บ Token ล็อกอิน, การตั้งค่าแอป, หรือ Cache ข้อมูลเล็กๆ น้อยๆ`,
         codeExamples: [{
-          title: 'Bundle Analysis',
-          language: 'bash',
-          code: `# Install bundle visualizer\nnpx react-native-bundle-visualizer\n\n# Check bundle size\nnpx react-native bundle --platform ios --dev false --entry-file index.js --bundle-output bundle.js\nls -lh bundle.js\n\n# Enable Hermes in app.json\n# { "expo": { "jsEngine": "hermes" } }`
+          title: 'MMKV Usage',
+          language: 'typescript',
+          code: `import { MMKV } from 'react-native-mmkv';
+
+// 1. Create a storage instance
+export const storage = new MMKV();
+
+// 2. Write data (Synchronous - NO AWAIT!)
+storage.set('user.name', 'John Doe');
+storage.set('user.age', 25);
+storage.set('isDarkMode', true);
+
+// 3. Read data
+const userName = storage.getString('user.name');
+const age = storage.getNumber('user.age');
+const isDark = storage.getBoolean('isDarkMode');
+
+// 4. Delete data
+storage.delete('user.name');`
         }]
       },
       {
-        id: 'e05-codesplit',
-        titleEn: 'Code Splitting & Lazy Loading',
-        titleTh: 'Code Splitting และ Lazy Loading',
-        descriptionEn: 'Split code for faster initial load',
-        descriptionTh: 'แยกโค้ดเพื่อให้โหลดครั้งแรกเร็วขึ้น',
+        id: 'e05-watermelon',
+        titleEn: 'Offline-First Apps (WatermelonDB)',
+        titleTh: 'แอปแบบ Offline-First (WatermelonDB)',
+        descriptionEn: 'Build reactive, offline-first apps that scale to 10,000s of records',
+        descriptionTh: 'สร้างแอปที่ใช้งานตอนออฟไลน์ได้สบายๆ แม้มีข้อมูลนับหมื่น',
         sdkVersion: '0.76', lastUpdated: '2026-02-10',
-        contentEn: `# Code Splitting\n\n## React.lazy and Suspense\nLazy load screens that are not immediately needed.\n\n## Dynamic Imports\nLoad modules on demand.`,
-        contentTh: `# Code Splitting\n\n## React.lazy และ Suspense\nLazy load หน้าจอที่ยังไม่ต้องใช้ทันที\n\n## Dynamic Imports\nโหลด modules ตามต้องการ`,
+        contentEn: `# WatermelonDB 🍉
+
+If your app needs to work without the internet (Offline-First) and has thousands of records (like a chat app, or complex note-taking app), MMKV isn't enough. You need a real database.
+
+## Why WatermelonDB?
+- **Lazy Loading**: It only loads data when the screen actually needs it. You can have 10,000 records, and the app will still open instantly.
+- **Reactive**: If data changes in the database, the UI updates automatically (just like React State).
+- **Sync**: It has a built-in engine to safely sync offline changes back to your remote server when the internet comes back.`,
+        contentTh: `# WatermelonDB 🍉
+
+ถ้าแอปของคุณจำเป็นต้องใช้งานตอนไม่มีเน็ต (Offline-First) และมีข้อมูลเป็นหมื่นๆ ชิ้น (เช่น แอปแชท, แอปจดโน้ตซับซ้อน) ลำพังแค่ MMKV คงไม่พอ คุณต้องใช้ Database แบบเต็มตัว
+
+## ทำไมต้องเป็น WatermelonDB?
+- **Lazy Loading**: มันจะดึงข้อมูลมาเฉพาะตอนที่หน้าจอนั้นจำเป็นต้องใช้จริงๆ สมมติมีข้อมูล 10,000 รายการ แอปก็ยังเปิดติดทันที
+- **Responsive & Reactive**: ถ้าฐานข้อมูลเปลี่ยน หน้าจอจะอัปเดตตามอัตโนมัติ (เหมือน State ของ React เลย)
+- **ระบบ Sync ในตัว**: มีเครื่องมือช่วยซิงก์ข้อมูลออฟไลน์กลับไปที่เซิร์ฟเวอร์หลักอย่างปลอดภัย เมื่อเน็ตกลับมาต่อติด`,
         codeExamples: [{
-          title: 'Lazy Loading Screens',
+          title: 'Reactive Database Component',
           language: 'tsx',
-          code: `import React, { Suspense, lazy } from 'react';\nimport { ActivityIndicator } from 'react-native';\n\nconst HeavyScreen = lazy(() => import('./screens/HeavyScreen'));\n\nexport function App() {\n  return (\n    <Suspense fallback={<ActivityIndicator size="large" />}>\n      <HeavyScreen />\n    </Suspense>\n  );\n}`
+          code: `import { withObservables } from '@nozbe/watermelondb/react';
+import { View, Text } from 'react-native';
+
+const PostList = ({ posts }) => (
+  <View>
+    {posts.map(post => (
+      <Text key={post.id}>{post.title}</Text>
+    ))}
+  </View>
+);
+
+// This "magically" connects the component to the database. 
+// Whenever posts are added or deleted, this component updates instantly!
+export default withObservables(['posts'], ({ database }) => ({
+  posts: database.collections.get('posts').query().observe(),
+}))(PostList);`
         }]
       },
       {
