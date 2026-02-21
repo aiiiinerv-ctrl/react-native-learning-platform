@@ -47,6 +47,21 @@ export function Screen() {
         }]
       },
       {
+        id: 'i01b-usereducer',
+        titleEn: 'Complex State with useReducer',
+        titleTh: 'จัดการ State ที่ซับซ้อนด้วย useReducer',
+        descriptionEn: 'Scale up local state management using useReducer',
+        descriptionTh: 'ยกระดับการจัดการ Local State ด้วย useReducer',
+        sdkVersion: '0.76', lastUpdated: '2026-02-22',
+        contentEn: `# useReducer\n\nWhen \`useState\` starts getting chaotic with multiple state variables updating together, it's time to use \`useReducer\`.\n\n## Why useReducer?\nIt centralizes your state logic into a single "reducer" function. This makes it easier to track changes and guarantees that related states (like \`loading\`, \`data\`, and \`error\`) are updated simultaneously.`,
+        contentTh: `# useReducer\n\nเมื่อหน้าจอเริ่มมี \`useState\` เยอะเกินไป และต้องอัพเดตหลายๆ ค่าพร้อมกัน การเปลี่ยนมาใช้ \`useReducer\` จะช่วยให้ชีวิตง่ายขึ้น\n\n## ทำไมต้อง useReducer?\nมันช่วยรวบรวมลอจิกการเปลี่ยน state ทั้งหมดไว้ในฟังก์ชันเดียว (reducer) ทำให้เราติดตามการอัพเดตข้อมูลได้ง่ายขึ้น และรับประกันว่า state ที่เกี่ยวข้องกัน (เช่น \`loading\`, \`data\`, \`error\`) จะถูกอัพเดตไปพร้อมๆ กันเสมอ`,
+        codeExamples: [{
+          title: 'useReducer Example',
+          language: 'tsx',
+          code: `import { useReducer } from 'react';\nimport { View, Text, Button } from 'react-native';\n\ntype State = { count: number; error: string | null };\ntype Action = { type: 'increment' | 'decrement' } | { type: 'error'; payload: string };\n\nconst initialState: State = { count: 0, error: null };\n\nfunction reducer(state: State, action: Action): State {\n  switch (action.type) {\n    case 'increment':\n      return { count: state.count + 1, error: null };\n    case 'decrement':\n      return { count: state.count - 1, error: null };\n    case 'error':\n      return { ...state, error: action.payload };\n    default:\n      return state;\n  }\n}\n\nexport function Counter() {\n  const [state, dispatch] = useReducer(reducer, initialState);\n\n  return (\n    <View>\n      <Text>Count: {state.count}</Text>\n      <Button title="+" onPress={() => dispatch({ type: 'increment' })} />\n      <Button title="-" onPress={() => dispatch({ type: 'decrement' })} />\n    </View>\n  );\n}`
+        }]
+      },
+      {
         id: 'i02-query',
         titleEn: 'Data Fetching (React Query)',
         titleTh: 'การดึงข้อมูล (React Query)',

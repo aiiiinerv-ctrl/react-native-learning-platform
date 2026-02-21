@@ -17,9 +17,9 @@
   --accent-orange: #f59e0b;
   --accent-red: #ef4444;
   --accent-pink: #ec4899;
-  --gradient-primary: linear-gradient(135deg, #6c63ff, #a855f7, #ec4899);
+  --gradient-primary: linear-gradient(135deg, #3b82f6, #06b6d4);
   --gradient-beginner: linear-gradient(135deg, #10b981, #22d3ee);
-  --gradient-intermediate: linear-gradient(135deg, #6c63ff, #a855f7);
+  --gradient-intermediate: linear-gradient(135deg, #3b82f6, #06b6d4);
   --gradient-expert: linear-gradient(135deg, #f59e0b, #ef4444);
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -42,6 +42,8 @@
   --text-muted: #94a3b8;
   --shadow-glow: 0 4px 24px rgba(0, 0, 0, 0.06);
   --accent-blue: #4f46e5;
+  --gradient-primary: linear-gradient(135deg, #2563eb, #0891b2);
+  --gradient-intermediate: linear-gradient(135deg, #2563eb, #0891b2);
 }
 
 *,
@@ -176,6 +178,7 @@ button {
   font-weight: 900;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 1rem;
   animation: fadeInUp 0.8s ease-out;
