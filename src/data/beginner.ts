@@ -680,6 +680,84 @@ export function HomeScreen() {
         ]
       },
       {
+        id: 'b06c-props',
+        titleEn: 'Understanding Props',
+        titleTh: 'ทำความเข้าใจ Props',
+        descriptionEn: 'How to pass data into components using Props',
+        descriptionTh: 'วิธีการส่งต่อข้อมูลข้าม Component ด้วย Props',
+        sdkVersion: '0.76',
+        lastUpdated: '2026-02-22',
+        contentEn: `# Props (Properties)
+
+## What are Props?
+Imagine a Component is a machine. **Props** are the buttons and dials you turn to change how the machine works. In React Native, Props are simply data passed from a Parent component down to a Child component.
+
+## Why do we need Props?
+Without Props, every Component would look exactly the same. Props make components **Dynamic** and **Reusable**. 
+For example, instead of making three different Button components for "Login", "Logout", and "Confirm", you just make one \`Button\` component and pass the name via a Prop!
+
+## Syntax Rules
+- Props are passed like HTML attributes: \`<MyButton title="Click Me!" />\`
+- Props are received as an object in the function arguments: \`export function MyButton(props) { ... }\`
+- Usually, we destructure them instantly for cleaner code: \`export function MyButton({ title }) { ... }\``,
+        contentTh: `# Props (Properties)
+
+## Props คืออะไร?
+ลองนึกภาพว่า Component คือตู้กดน้ำ หรือเครื่องจักร **Props ก็คือปุ่มกด** ที่เราเอาไว้สั่งงานว่าอยากให้ตู้กดน้ำนั้นทำงานแบบไหน ในโลกของ React นั้น Props คือข้อมูลที่ถูกส่งจาก Component แม่ (Parent) ลงไปให้ Component ลูก (Child) 
+
+## ทำไมเราถึงต้องใช้ Props?
+ถ้าไม่มี Props Component ทุกตัวที่เราสร้างหน้าตาจะเหมือนกันเป๊ะ 100% เลยครับ Props เป็นตัวช่วยให้ Component ของเรายืดหยุ่นและนำไปใช้งานซ้ำได้ (Reusable)
+เช่น แทนที่เราจะสร้างปุ่ม 3 ปุ่มแยกกันสำหรับ "เข้าสู่ระบบ", "ออกจากระบบ", และ "ยืนยัน" เราแค่สร้างปุ่ม \`CustomButton\` หน้าตามาตรฐานมาอันเดียว แล้วค่อยส่งข้อความเข้าไปทำงานผ่านตัวแปร Prop แทนครับ!
+
+## กฎการเขียน
+- ตอนส่งข้อมูล เราจะส่งไปคล้ายๆ รหัส HTML เช่น \`<CustomButton title="คลิกฉัน!" />\`
+- ฝั่งลูกเวลาจะรับข้อมูล จะรับมาเป็น Object ในวงเล็บ เช่น \`export function CustomButton(props) { ... }\`
+- แต่นักพัฒนาส่วนใหญ่นิยมใช้วิธีแกะกล่อง (Destructure) ออกมาเลย เพื่อให้โค้ดสั้นและจัดการง่าย เช่น \`export function CustomButton({ title }) { ... }\``,
+        codeExamples: [
+          {
+            title: 'Multiple Props Example',
+            language: 'tsx',
+            code: `import { View, Text, Pressable } from 'react-native';
+
+// 1. We define what Props this component expects (TypeScript makes this safe!)
+type UserProfileProps = {
+  name: string;
+  age: number;
+  isActive: boolean;
+};
+
+// 2. We receive the props and map them to the UI
+export function UserProfile({ name, age, isActive }: UserProfileProps) {
+  return (
+    <View className="mb-4 p-4 border border-slate-200 rounded-lg">
+      <Text className="text-xl font-bold">{name}</Text>
+      <Text className="text-slate-600">Age: {age}</Text>
+      
+      {/* 3. Conditional rendering based on a boolean Prop! */}
+      {isActive ? (
+        <Text className="text-green-500 font-bold mt-2">● Online</Text>
+      ) : (
+        <Text className="text-red-500 font-bold mt-2">○ Offline</Text>
+      )}
+    </View>
+  );
+}
+
+// -------------------------------------------------- \\\\
+
+export function HomeScreen() {
+  return (
+    <View className="flex-1 p-6">
+      {/* 4. We pass completely different data to the exact same component! */}
+      <UserProfile name="John Doe" age={25} isActive={true} />
+      <UserProfile name="Jane Smith" age={30} isActive={false} />
+    </View>
+  );
+}`
+          }
+        ]
+      },
+      {
         id: 'b07-styling',
         titleEn: 'Styling & Flexbox',
         titleTh: 'Styling และ Flexbox',
