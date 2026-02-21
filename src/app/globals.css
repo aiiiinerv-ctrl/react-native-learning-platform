@@ -1568,3 +1568,107 @@ button {
 .pie-detail-user:hover {
   background: rgba(108, 99, 255, 0.06);
 }
+
+/* Quota Cards */
+.quota-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.quota-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  backdrop-filter: blur(12px);
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.quota-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.quota-card.safe {
+  border-left-color: #10b981;
+}
+
+.quota-card.warning {
+  border-left-color: #f59e0b;
+}
+
+.quota-card.danger {
+  border-left-color: #ef4444;
+}
+
+.quota-card.info {
+  border-left-color: #6366f1;
+}
+
+.quota-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.quota-card-icon {
+  font-size: 1.1rem;
+}
+
+.quota-card-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.quota-card-values {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.quota-card-used {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.quota-card-limit {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.quota-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.quota-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+.quota-card-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+}
+
+.quota-card-detail {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--glass-border);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  animation: slideDown 0.2s ease;
+}

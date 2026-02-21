@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import AdminGuard from '@/components/AdminGuard';
 import { useI18n } from '@/i18n/I18nProvider';
-import { getAllUsers, getUserProgress, getTotalLessonCount, generateRecommendation, sendRecommendationToUser, UserProfile } from '@/lib/admin';
+import { getAllUsers, getUserProgress, getTotalLessonCount, generateRecommendation, sendRecommendationToUser, UserProfile, getFirestoreUsageEstimate, SPARK_LIMITS, getSessionReads, getSessionWrites, FirestoreUsage } from '@/lib/admin';
 import { curriculum } from '@/data/curriculum';
 
 type Tab = 'overview' | 'users' | 'firebase';
@@ -232,9 +232,58 @@ function PieChart({ segments, size = 180 }: { segments: { label: string; value: 
     );
 }
 
+/* ─── Quota Card Component ─── */
+function QuotaCard({ icon, label, used, limit, unit, limitUnit, detail, locale }: {
+    icon: string; label: string; used: number; limit: number | null;
+    unit?: string; limitUnit?: string; detail: string; locale: string;
+}) {
+    const [showDetail, setShowDetail] = useState(false);
+    const pct = limit ? Math.min((used / limit) * 100, 100) : 0;
+    const status = limit === null ? 'info' : pct < 50 ? 'safe' : pct < 80 ? 'warning' : 'danger';
+    const barColor = status === 'safe' ? '#10b981' : status === 'warning' ? '#f59e0b' : status === 'danger' ? '#ef4444' : '#6366f1';
+
+    return (
+        <div className={`quota-card ${status}`} onClick={() => setShowDetail(!showDetail)} style={{ cursor: 'pointer' }}>
+            <div className="quota-card-header">
+                <span className="quota-card-icon">{icon}</span>
+                <span className="quota-card-label">{label}</span>
+            </div>
+            <div className="quota-card-values">
+                <span className="quota-card-used">{typeof used === 'number' && used < 1 && used > 0 ? used.toFixed(3) : used.toLocaleString()}</span>
+                {limit !== null && (
+                    <span className="quota-card-limit">/ {limitUnit || limit.toLocaleString()} {unit}</span>
+                )}
+                {limit === null && <span className="quota-card-limit">{unit || ''}</span>}
+            </div>
+            {limit !== null && (
+                <div className="quota-bar">
+                    <div className="quota-bar-fill" style={{ width: `${pct}%`, background: barColor }} />
+                </div>
+            )}
+            <div className="quota-card-status">
+                {status === 'safe' && <span style={{ color: '#10b981' }}>✅ {locale === 'th' ? 'ปกติ' : 'Normal'}</span>}
+                {status === 'warning' && <span style={{ color: '#f59e0b' }}>⚠️ {locale === 'th' ? 'ใกล้ถึง quota' : 'Approaching limit'}</span>}
+                {status === 'danger' && <span style={{ color: '#ef4444' }}>🔴 {locale === 'th' ? 'ใกล้เต็ม!' : 'Near limit!'}</span>}
+                {status === 'info' && <span style={{ color: '#6366f1' }}>ℹ️</span>}
+                {limit !== null && <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>{pct.toFixed(1)}%</span>}
+            </div>
+            {showDetail && (
+                <div className="quota-card-detail">{detail}</div>
+            )}
+        </div>
+    );
+}
+
 /* ─── Firebase Usage Tab ─── */
 function FirebaseUsageTab({ users, totalLessons, locale }: { users: UserProfile[]; totalLessons: number; locale: string }) {
     const [expanded, setExpanded] = useState<string | null>(null);
+    const [usage, setUsage] = useState<FirestoreUsage | null>(null);
+    const [loadingUsage, setLoadingUsage] = useState(true);
+
+    useEffect(() => {
+        setLoadingUsage(true);
+        getFirestoreUsageEstimate().then(u => { setUsage(u); setLoadingUsage(false); }).catch(() => setLoadingUsage(false));
+    }, []);
 
     // 1. Progress distribution
     const notStarted = users.filter(u => getUserProgress(u.progress || {}) === 0);
@@ -300,7 +349,82 @@ function FirebaseUsageTab({ users, totalLessons, locale }: { users: UserProfile[
 
     return (
         <>
-            <h3 style={{ marginBottom: '1.5rem' }}>🔥 {locale === 'th' ? 'สถิติการใช้งาน Firebase' : 'Firebase Usage Analytics'}</h3>
+            {/* Firestore Usage Quota Section */}
+            <h3 style={{ marginBottom: '1.5rem' }}>
+                ☁️ {locale === 'th' ? 'การใช้งาน Cloud Firestore' : 'Cloud Firestore Usage'}
+            </h3>
+
+            {loadingUsage ? (
+                <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>⏳ {locale === 'th' ? 'กำลังโหลดข้อมูล...' : 'Loading usage data...'}</div>
+            ) : usage && (
+                <div className="quota-grid">
+                    <QuotaCard
+                        icon="📄" label={locale === 'th' ? 'Documents ทั้งหมด' : 'Total Documents'}
+                        used={usage.documents} limit={null}
+                        detail={locale === 'th' ? `${usage.collections.map(c => `${c.name}: ${c.docCount} docs`).join(', ')}` : `${usage.collections.map(c => `${c.name}: ${c.docCount} docs`).join(', ')}`}
+                        locale={locale}
+                    />
+                    <QuotaCard
+                        icon="💾" label={locale === 'th' ? 'พื้นที่จัดเก็บ' : 'Storage Used'}
+                        used={usage.estimatedStorageMB} limit={SPARK_LIMITS.storedDataGB * 1024}
+                        unit="MB" limitUnit={`${SPARK_LIMITS.storedDataGB} GB`}
+                        detail={locale === 'th' ? `ประมาณการจากขนาด documents` : `Estimated from document sizes`}
+                        locale={locale}
+                    />
+                    <QuotaCard
+                        icon="📖" label={locale === 'th' ? 'Reads (เซสชันนี้)' : 'Reads (this session)'}
+                        used={getSessionReads()} limit={SPARK_LIMITS.reads}
+                        unit="reads" limitUnit={`${(SPARK_LIMITS.reads / 1000).toFixed(0)}K/day`}
+                        detail={locale === 'th' ? `Spark Plan: ${SPARK_LIMITS.reads.toLocaleString()} reads/วัน` : `Spark Plan: ${SPARK_LIMITS.reads.toLocaleString()} reads/day`}
+                        locale={locale}
+                    />
+                    <QuotaCard
+                        icon="✏️" label={locale === 'th' ? 'Writes (เซสชันนี้)' : 'Writes (this session)'}
+                        used={getSessionWrites()} limit={SPARK_LIMITS.writes}
+                        unit="writes" limitUnit={`${(SPARK_LIMITS.writes / 1000).toFixed(0)}K/day`}
+                        detail={locale === 'th' ? `Spark Plan: ${SPARK_LIMITS.writes.toLocaleString()} writes/วัน` : `Spark Plan: ${SPARK_LIMITS.writes.toLocaleString()} writes/day`}
+                        locale={locale}
+                    />
+                    <QuotaCard
+                        icon="🌐" label={locale === 'th' ? 'Network Egress' : 'Network Egress'}
+                        used={0} limit={SPARK_LIMITS.networkEgressGB * 1024}
+                        unit="MB" limitUnit={`${SPARK_LIMITS.networkEgressGB} GB/mo`}
+                        detail={locale === 'th' ? 'ไม่สามารถวัดจาก client ได้ (ดูที่ Firebase Console)' : 'Cannot measure from client (check Firebase Console)'}
+                        locale={locale}
+                    />
+                    <QuotaCard
+                        icon="🗑" label={locale === 'th' ? 'Deletes' : 'Deletes (daily limit)'}
+                        used={0} limit={SPARK_LIMITS.deletes}
+                        unit="deletes" limitUnit={`${(SPARK_LIMITS.deletes / 1000).toFixed(0)}K/day`}
+                        detail={locale === 'th' ? `Spark Plan: ${SPARK_LIMITS.deletes.toLocaleString()} deletes/วัน` : `Spark Plan: ${SPARK_LIMITS.deletes.toLocaleString()} deletes/day`}
+                        locale={locale}
+                    />
+                </div>
+            )}
+
+            {/* Collection Detail */}
+            {usage && usage.collections.length > 0 && (
+                <div style={{ marginTop: '1.5rem' }}>
+                    <h4 style={{ marginBottom: '1rem' }}>📁 {locale === 'th' ? 'รายละเอียด Collections' : 'Collection Details'}</h4>
+                    <div className="quota-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
+                        {usage.collections.map(col => (
+                            <div key={col.name} className="pie-chart-card" style={{ padding: '1rem' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                    <span style={{ fontWeight: 600 }}>📁 {col.name}</span>
+                                    <span style={{ color: 'var(--accent-blue)', fontSize: '0.85rem' }}>{col.docCount} docs</span>
+                                </div>
+                                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                                    ~{col.estimatedSizeKB} KB
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <div style={{ marginTop: '2rem', marginBottom: '1rem', borderTop: '1px solid var(--glass-border)', paddingTop: '2rem' }}>
+                <h3 style={{ marginBottom: '1.5rem' }}>📊 {locale === 'th' ? 'สถิติการใช้งาน' : 'Usage Analytics'}</h3>
+            </div>
 
             <div className="pie-charts-grid">
                 {/* Chart 1: Progress Distribution */}

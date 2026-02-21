@@ -86,3 +86,73 @@ export async function getFirestoreCollections(): Promise<{ name: string; docs: {
 export async function deleteDocument(collectionName: string, docId: string) {
     await deleteDoc(doc(db, collectionName, docId));
 }
+
+export interface FirestoreUsage {
+    documents: number;
+    estimatedStorageMB: number;
+    collections: { name: string; docCount: number; estimatedSizeKB: number }[];
+    reads: number;  // estimated reads this session
+}
+
+// Spark Plan free tier daily limits
+export const SPARK_LIMITS = {
+    reads: 50000,
+    writes: 20000,
+    deletes: 20000,
+    storedDataGB: 1,       // 1 GiB stored data
+    networkEgressGB: 10,   // 10 GiB/month
+};
+
+let sessionReads = 0;
+let sessionWrites = 0;
+
+export function trackRead(count: number = 1) { sessionReads += count; }
+export function trackWrite(count: number = 1) { sessionWrites += count; }
+export function getSessionReads() { return sessionReads; }
+export function getSessionWrites() { return sessionWrites; }
+
+export async function getFirestoreUsageEstimate(): Promise<FirestoreUsage> {
+    const collectionNames = ['users'];
+    const collectionStats: { name: string; docCount: number; estimatedSizeKB: number }[] = [];
+    let totalDocs = 0;
+    let totalSizeBytes = 0;
+
+    for (const name of collectionNames) {
+        const snap = await getDocs(collection(db, name));
+        trackRead(snap.size);
+        let colSizeBytes = 0;
+
+        for (const d of snap.docs) {
+            const dataStr = JSON.stringify(d.data());
+            const docSize = dataStr.length + d.id.length + 32; // rough estimate
+            colSizeBytes += docSize;
+
+            // Check for subcollections (notifications, progress)
+            try {
+                const notifSnap = await getDocs(collection(db, name, d.id, 'notifications'));
+                trackRead(notifSnap.size || 1);
+                totalDocs += notifSnap.size;
+                for (const nd of notifSnap.docs) {
+                    colSizeBytes += JSON.stringify(nd.data()).length + nd.id.length + 32;
+                }
+            } catch {
+                // subcollection may not exist
+            }
+        }
+
+        totalDocs += snap.size;
+        totalSizeBytes += colSizeBytes;
+        collectionStats.push({
+            name,
+            docCount: snap.size,
+            estimatedSizeKB: Math.round(colSizeBytes / 1024 * 100) / 100,
+        });
+    }
+
+    return {
+        documents: totalDocs,
+        estimatedStorageMB: Math.round(totalSizeBytes / (1024 * 1024) * 1000) / 1000,
+        collections: collectionStats,
+        reads: sessionReads,
+    };
+}
