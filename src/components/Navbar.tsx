@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useI18n } from '@/i18n/I18nProvider';
+import AuthButton from './AuthButton';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -33,6 +34,9 @@ export default function Navbar() {
           <button className="lang-toggle" onClick={toggleLocale}>
             {t.nav.language}
           </button>
+        </li>
+        <li>
+          <AuthButton />
         </li>
       </ul>
     </nav>

@@ -1,15 +1,18 @@
 'use client';
 import { I18nProvider } from '@/i18n/I18nProvider';
+import { AuthProvider } from '@/context/AuthContext';
 import { ProgressProvider } from '@/context/ProgressContext';
 import Navbar from '@/components/Navbar';
 
 export default function ClientProviders({ children }: { children: React.ReactNode }) {
     return (
         <I18nProvider>
-            <ProgressProvider>
-                <Navbar />
-                <main>{children}</main>
-            </ProgressProvider>
+            <AuthProvider>
+                <ProgressProvider>
+                    <Navbar />
+                    <main>{children}</main>
+                </ProgressProvider>
+            </AuthProvider>
         </I18nProvider>
     );
 }
