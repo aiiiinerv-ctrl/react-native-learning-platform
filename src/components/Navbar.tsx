@@ -2,11 +2,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useI18n } from '@/i18n/I18nProvider';
+import { useAuth } from '@/context/AuthContext';
 import AuthButton from './AuthButton';
+import NotificationBell from './NotificationBell';
 
 export default function Navbar() {
   const pathname = usePathname();
   const { t, toggleLocale } = useI18n();
+  const { isAdmin } = useAuth();
 
   const links = [
     { href: '/', label: t.nav.home },
@@ -30,10 +33,20 @@ export default function Navbar() {
             </Link>
           </li>
         ))}
+        {isAdmin && (
+          <li>
+            <Link href="/admin" className={pathname.startsWith('/admin') ? 'active' : ''}>
+              ⚙ Admin
+            </Link>
+          </li>
+        )}
         <li>
           <button className="lang-toggle" onClick={toggleLocale}>
             {t.nav.language}
           </button>
+        </li>
+        <li>
+          <NotificationBell />
         </li>
         <li>
           <AuthButton />

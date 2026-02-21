@@ -3,6 +3,9 @@ import React, { createContext, useContext, useState, useEffect, ReactNode, useCa
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/context/AuthContext';
+import { useI18n } from '@/i18n/I18nProvider';
+import { addNotification, createLessonCompleteNotification } from '@/lib/notifications';
+import { curriculum } from '@/data/curriculum';
 import { Progress } from '@/data/types';
 
 interface ProgressContextType {
@@ -15,47 +18,51 @@ interface ProgressContextType {
 
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
 
+function getLessonTitle(lessonId: string, locale: string): string {
+  for (const level of curriculum) {
+    for (const mod of level.modules) {
+      for (const lesson of mod.lessons) {
+        if (lesson.id === lessonId) return locale === 'th' ? lesson.titleTh : lesson.titleEn;
+      }
+    }
+  }
+  return lessonId;
+}
+
 export function ProgressProvider({ children }: { children: ReactNode }) {
   const [progress, setProgress] = useState<Progress>({});
   const { user } = useAuth();
+  const { locale } = useI18n();
 
-  // Load progress from localStorage or Firestore
   useEffect(() => {
     const loadProgress = async () => {
       if (user) {
-        // User is logged in — load from Firestore
         try {
           const ref = doc(db, 'users', user.uid);
           const snap = await getDoc(ref);
           if (snap.exists()) {
             const firestoreProgress = snap.data().progress || {};
-            // Merge with any localStorage progress
             const localRaw = localStorage.getItem('rn-learn-progress');
             const localProgress = localRaw ? JSON.parse(localRaw) : {};
             const merged = { ...localProgress, ...firestoreProgress };
             setProgress(merged);
-            // Save merged back to Firestore
             await setDoc(ref, { progress: merged }, { merge: true });
-            // Clear localStorage after successful merge
             localStorage.removeItem('rn-learn-progress');
           } else {
-            // First time user — migrate localStorage to Firestore
             const localRaw = localStorage.getItem('rn-learn-progress');
             if (localRaw) {
               const localProgress = JSON.parse(localRaw);
               setProgress(localProgress);
-              await setDoc(doc(db, 'users', user.uid), { progress: localProgress });
+              await setDoc(doc(db, 'users', user.uid), { progress: localProgress }, { merge: true });
               localStorage.removeItem('rn-learn-progress');
             }
           }
         } catch (err) {
           console.error('Failed to load Firestore progress:', err);
-          // Fallback to localStorage
           const saved = localStorage.getItem('rn-learn-progress');
           if (saved) setProgress(JSON.parse(saved));
         }
       } else {
-        // Not logged in — use localStorage
         const saved = localStorage.getItem('rn-learn-progress');
         if (saved) {
           try { setProgress(JSON.parse(saved)); } catch { }
@@ -80,8 +87,17 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 
   const toggleLesson = (lessonId: string) => {
     setProgress(prev => {
-      const next = { ...prev, [lessonId]: !prev[lessonId] };
+      const wasCompleted = prev[lessonId];
+      const next = { ...prev, [lessonId]: !wasCompleted };
       saveProgress(next);
+
+      // Send notification when marking as complete (not when un-marking)
+      if (!wasCompleted && user) {
+        const title = getLessonTitle(lessonId, locale);
+        const notif = createLessonCompleteNotification(title, lessonId, locale);
+        addNotification(user.uid, notif).catch(console.error);
+      }
+
       return next;
     });
   };

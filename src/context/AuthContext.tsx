@@ -1,11 +1,14 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, signInWithPopup, signOut as firebaseSignOut, onAuthStateChanged } from 'firebase/auth';
-import { auth, googleProvider } from '@/lib/firebase';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, googleProvider, db } from '@/lib/firebase';
+import { isAdminEmail } from '@/lib/admin';
 
 interface AuthContextType {
     user: User | null;
     loading: boolean;
+    isAdmin: boolean;
     signInWithGoogle: () => Promise<void>;
     signOut: () => Promise<void>;
 }
@@ -15,11 +18,27 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
-        const unsub = onAuthStateChanged(auth, (u) => {
+        const unsub = onAuthStateChanged(auth, async (u) => {
             setUser(u);
+            setIsAdmin(isAdminEmail(u?.email));
             setLoading(false);
+
+            // Save/update user profile in Firestore
+            if (u) {
+                try {
+                    await setDoc(doc(db, 'users', u.uid), {
+                        displayName: u.displayName || '',
+                        email: u.email || '',
+                        photoURL: u.photoURL || '',
+                        lastActive: new Date().toISOString(),
+                    }, { merge: true });
+                } catch (err) {
+                    console.error('Failed to save user profile:', err);
+                }
+            }
         });
         return () => unsub();
     }, []);
@@ -41,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, signInWithGoogle, signOut }}>
+        <AuthContext.Provider value={{ user, loading, isAdmin, signInWithGoogle, signOut }}>
             {children}
         </AuthContext.Provider>
     );

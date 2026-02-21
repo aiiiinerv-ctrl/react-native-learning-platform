@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useI18n } from '@/i18n/I18nProvider';
 import { useProgress } from '@/context/ProgressContext';
 import { getLevelData } from '@/data/curriculum';
+import { getWorkshopsForLesson } from '@/data/workshops';
 
 export default function LevelPage({ params }: { params: Promise<{ level: string }> }) {
   const { level } = use(params);
@@ -20,7 +21,6 @@ export default function LevelPage({ params }: { params: Promise<{ level: string 
   };
 
   const levelTitle = locale === 'th' ? levelNames[level]?.th : levelNames[level]?.en;
-  const levelDesc = locale === 'th' ? (t.levels as any)[level]?.description : (t.levels as any)[level]?.description;
 
   return (
     <>
@@ -51,21 +51,32 @@ export default function LevelPage({ params }: { params: Promise<{ level: string 
                 <div className="module-progress-fill" style={{ width: `${progressPct}%` }} />
               </div>
               <div className="lesson-list">
-                {mod.lessons.map(lesson => (
-                  <Link href={`/learn/${level}/${mod.id}/${lesson.id}`} className="lesson-item" key={lesson.id}>
-                    <div className={`lesson-check ${isCompleted(lesson.id) ? 'completed' : ''}`}>
-                      {isCompleted(lesson.id) && <span style={{ color: 'white', fontSize: '12px' }}>✓</span>}
+                {mod.lessons.map(lesson => {
+                  const linkedWorkshops = getWorkshopsForLesson(lesson.id);
+                  return (
+                    <div key={lesson.id}>
+                      <Link href={`/learn/${level}/${mod.id}/${lesson.id}`} className="lesson-item">
+                        <div className={`lesson-check ${isCompleted(lesson.id) ? 'completed' : ''}`}>
+                          {isCompleted(lesson.id) && <span style={{ color: 'white', fontSize: '12px' }}>✓</span>}
+                        </div>
+                        <span className="lesson-title">
+                          {locale === 'th' ? lesson.titleTh : lesson.titleEn}
+                        </span>
+                        {lesson.deprecations && lesson.deprecations.length > 0 && (
+                          <span className={`deprecation-badge ${lesson.deprecations[0].severity}`}>
+                            ⚠ {lesson.deprecations[0].severity === 'critical' ? 'Critical' : 'Update'}
+                          </span>
+                        )}
+                      </Link>
+                      {linkedWorkshops.map(ws => (
+                        <Link href={`/workshop/${ws.id}`} className="workshop-badge" key={ws.id}>
+                          🛠 {locale === 'th' ? ws.titleTh : ws.titleEn}
+                          <span style={{ opacity: 0.6 }}>→</span>
+                        </Link>
+                      ))}
                     </div>
-                    <span className="lesson-title">
-                      {locale === 'th' ? lesson.titleTh : lesson.titleEn}
-                    </span>
-                    {lesson.deprecations && lesson.deprecations.length > 0 && (
-                      <span className={`deprecation-badge ${lesson.deprecations[0].severity}`}>
-                        ⚠ {lesson.deprecations[0].severity === 'critical' ? 'Critical' : 'Update'}
-                      </span>
-                    )}
-                  </Link>
-                ))}
+                  );
+                })}
               </div>
             </div>
           );
