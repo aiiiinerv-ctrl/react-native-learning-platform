@@ -1,5 +1,5 @@
 import { db } from './firebase';
-import { collection, getDocs, doc, getDoc, setDoc, deleteDoc, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, setDoc, deleteDoc, query, orderBy, addDoc } from 'firebase/firestore';
 import { curriculum } from '@/data/curriculum';
 
 export const ADMIN_EMAILS = ['ainerv86@gmail.com'];
@@ -81,6 +81,18 @@ export async function getFirestoreCollections(): Promise<{ name: string; docs: {
     }
 
     return result;
+}
+
+export async function queuePushNotification(title: string, body: string, link: string) {
+    const queueRef = collection(db, 'notification_queue');
+    await addDoc(queueRef, {
+        title,
+        body,
+        link,
+        createdAt: new Date().toISOString(),
+        status: 'pending'
+    });
+    trackWrite(1);
 }
 
 export async function deleteDocument(collectionName: string, docId: string) {

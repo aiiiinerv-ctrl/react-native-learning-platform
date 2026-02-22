@@ -2,7 +2,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, signInWithPopup, signOut as firebaseSignOut, onAuthStateChanged } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { auth, googleProvider, db } from '@/lib/firebase';
+import { getToken } from 'firebase/messaging';
+import { auth, googleProvider, db, messaging } from '@/lib/firebase';
 import { isAdminEmail } from '@/lib/admin';
 
 interface AuthContextType {
@@ -20,6 +21,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [loading, setLoading] = useState(true);
     const [isAdmin, setIsAdmin] = useState(false);
 
+    const requestNotificationPermissionAndSaveToken = async (uid: string) => {
+        if (!messaging) return;
+        try {
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                const currentToken = await getToken(messaging, {
+                    // vapidKey: 'YOUR_PUBLIC_VAPID_KEY_HERE' 
+                });
+                if (currentToken) {
+                    await setDoc(doc(db, 'users', uid), {
+                        fcmToken: currentToken,
+                    }, { merge: true });
+                }
+            }
+        } catch (error) {
+            console.error('Failed to get FCM token:', error);
+        }
+    };
+
     useEffect(() => {
         const unsub = onAuthStateChanged(auth, async (u) => {
             setUser(u);
@@ -35,6 +55,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                         photoURL: u.photoURL || '',
                         lastActive: new Date().toISOString(),
                     }, { merge: true });
+
+                    // Also setup push notifications
+                    await requestNotificationPermissionAndSaveToken(u.uid);
                 } catch (err) {
                     console.error('Failed to save user profile:', err);
                 }

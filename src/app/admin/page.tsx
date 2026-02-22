@@ -4,6 +4,7 @@ import AdminGuard from '@/components/AdminGuard';
 import { useI18n } from '@/i18n/I18nProvider';
 import { getAllUsers, getUserProgress, getTotalLessonCount, generateRecommendation, sendRecommendationToUser, UserProfile, getFirestoreUsageEstimate, SPARK_LIMITS, getSessionReads, getSessionWrites, FirestoreUsage } from '@/lib/admin';
 import { curriculum } from '@/data/curriculum';
+import NotificationSender from './components/NotificationSender';
 
 type Tab = 'overview' | 'users' | 'firebase';
 
@@ -103,7 +104,10 @@ function AdminDashboard() {
                             </div>
                         </div>
 
-                        <h3 style={{ marginBottom: '1rem' }}>{locale === 'th' ? 'ผู้ใช้ล่าสุด' : 'Recent Users'}</h3>
+                        {/* Notifications Module */}
+                        <NotificationSender />
+
+                        <h3 style={{ marginTop: '2rem', marginBottom: '1rem' }}>{locale === 'th' ? 'ผู้ใช้ล่าสุด' : 'Recent Users'}</h3>
                         <table className="admin-table">
                             <thead>
                                 <tr>
@@ -141,60 +145,65 @@ function AdminDashboard() {
                             </tbody>
                         </table>
                     </>
-                )}
+                )
+                }
 
-                {tab === 'users' && (
-                    <>
-                        <table className="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>{locale === 'th' ? 'ผู้ใช้' : 'User'}</th>
-                                    <th>{locale === 'th' ? 'ความก้าวหน้า' : 'Progress'}</th>
-                                    <th>{locale === 'th' ? 'บทที่เรียนจบ' : 'Completed'}</th>
-                                    <th>{locale === 'th' ? 'คำแนะนำ' : 'Recommend'}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {users.map(u => {
-                                    const prog = getUserProgress(u.progress || {});
-                                    const completed = Object.values(u.progress || {}).filter(Boolean).length;
-                                    return (
-                                        <tr key={u.uid}>
-                                            <td>
-                                                <div className="admin-user-row">
-                                                    {u.photoURL && <img src={u.photoURL} className="admin-user-avatar" alt="" referrerPolicy="no-referrer" />}
-                                                    <div>
-                                                        <div style={{ fontWeight: 600 }}>{u.displayName || 'Unknown'}</div>
-                                                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{u.email}</div>
+                {
+                    tab === 'users' && (
+                        <>
+                            <table className="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>{locale === 'th' ? 'ผู้ใช้' : 'User'}</th>
+                                        <th>{locale === 'th' ? 'ความก้าวหน้า' : 'Progress'}</th>
+                                        <th>{locale === 'th' ? 'บทที่เรียนจบ' : 'Completed'}</th>
+                                        <th>{locale === 'th' ? 'คำแนะนำ' : 'Recommend'}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {users.map(u => {
+                                        const prog = getUserProgress(u.progress || {});
+                                        const completed = Object.values(u.progress || {}).filter(Boolean).length;
+                                        return (
+                                            <tr key={u.uid}>
+                                                <td>
+                                                    <div className="admin-user-row">
+                                                        {u.photoURL && <img src={u.photoURL} className="admin-user-avatar" alt="" referrerPolicy="no-referrer" />}
+                                                        <div>
+                                                            <div style={{ fontWeight: 600 }}>{u.displayName || 'Unknown'}</div>
+                                                            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{u.email}</div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="admin-progress-bar">
-                                                    <div className="admin-progress-fill" style={{ width: `${prog}%` }} />
-                                                </div>
-                                                {prog}%
-                                            </td>
-                                            <td>{completed}/{totalLessons}</td>
-                                            <td>
-                                                <button className="btn" style={{ padding: '4px 12px', fontSize: '0.8rem' }}
-                                                    onClick={() => handleSendRecommendation(u)}
-                                                    disabled={sendingTo === u.uid}>
-                                                    {sendingTo === u.uid ? '⏳' : '📩'} {locale === 'th' ? 'ส่ง' : 'Send'}
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </>
-                )}
+                                                </td>
+                                                <td>
+                                                    <div className="admin-progress-bar">
+                                                        <div className="admin-progress-fill" style={{ width: `${prog}%` }} />
+                                                    </div>
+                                                    {prog}%
+                                                </td>
+                                                <td>{completed}/{totalLessons}</td>
+                                                <td>
+                                                    <button className="btn" style={{ padding: '4px 12px', fontSize: '0.8rem' }}
+                                                        onClick={() => handleSendRecommendation(u)}
+                                                        disabled={sendingTo === u.uid}>
+                                                        {sendingTo === u.uid ? '⏳' : '📩'} {locale === 'th' ? 'ส่ง' : 'Send'}
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </>
+                    )
+                }
 
-                {tab === 'firebase' && (
-                    <FirebaseUsageTab users={users} totalLessons={totalLessons} locale={locale} />
-                )}
-            </div>
+                {
+                    tab === 'firebase' && (
+                        <FirebaseUsageTab users={users} totalLessons={totalLessons} locale={locale} />
+                    )
+                }
+            </div >
         </>
     );
 }

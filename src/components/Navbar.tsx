@@ -1,4 +1,5 @@
 'use client';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useI18n } from '@/i18n/I18nProvider';
@@ -6,12 +7,27 @@ import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import AuthButton from './AuthButton';
 import NotificationBell from './NotificationBell';
+import { messaging } from '@/lib/firebase';
+import { onMessage } from 'firebase/messaging';
 
 export default function Navbar() {
   const pathname = usePathname();
   const { t, toggleLocale } = useI18n();
   const { isAdmin } = useAuth();
   const { theme, toggleTheme } = useTheme();
+
+  useEffect(() => {
+    if (!messaging) return;
+    const unsubscribe = onMessage(messaging, (payload) => {
+      console.log('Foreground push notification received:', payload);
+      const title = payload.notification?.title || 'New Push Notification';
+      const body = payload.notification?.body || '';
+      // For a quick foreground alert, we just use window.alert
+      // In a more complex app, we would use a toast library like react-hot-toast
+      alert(`🔔 ${title}\n${body}`);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const links = [
     { href: '/', label: t.nav.home },
