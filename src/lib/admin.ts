@@ -104,6 +104,10 @@ export interface FirestoreUsage {
     estimatedStorageMB: number;
     collections: { name: string; docCount: number; estimatedSizeKB: number }[];
     reads: number;  // estimated reads this session
+    writes: number; // estimated writes this session
+    readsPercent: number;
+    writesPercent: number;
+    storagePercent: number;
 }
 
 // Spark Plan free tier daily limits
@@ -124,7 +128,7 @@ export function getSessionReads() { return sessionReads; }
 export function getSessionWrites() { return sessionWrites; }
 
 export async function getFirestoreUsageEstimate(): Promise<FirestoreUsage> {
-    const collectionNames = ['users'];
+    const collectionNames = ['users', 'notification_queue'];
     const collectionStats: { name: string; docCount: number; estimatedSizeKB: number }[] = [];
     let totalDocs = 0;
     let totalSizeBytes = 0;
@@ -161,10 +165,16 @@ export async function getFirestoreUsageEstimate(): Promise<FirestoreUsage> {
         });
     }
 
+    const estimatedMB = Math.round(totalSizeBytes / (1024 * 1024) * 1000) / 1000;
+
     return {
         documents: totalDocs,
-        estimatedStorageMB: Math.round(totalSizeBytes / (1024 * 1024) * 1000) / 1000,
+        estimatedStorageMB: estimatedMB,
         collections: collectionStats,
         reads: sessionReads,
+        writes: sessionWrites,
+        readsPercent: Math.min(100, (sessionReads / SPARK_LIMITS.reads) * 100),
+        writesPercent: Math.min(100, (sessionWrites / SPARK_LIMITS.writes) * 100),
+        storagePercent: Math.min(100, (estimatedMB / (SPARK_LIMITS.storedDataGB * 1024)) * 100)
     };
 }

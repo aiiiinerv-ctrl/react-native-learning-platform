@@ -5,6 +5,7 @@ import { useI18n } from '@/i18n/I18nProvider';
 import { getAllUsers, getUserProgress, getTotalLessonCount, generateRecommendation, sendRecommendationToUser, UserProfile, getFirestoreUsageEstimate, SPARK_LIMITS, getSessionReads, getSessionWrites, FirestoreUsage } from '@/lib/admin';
 import { curriculum } from '@/data/curriculum';
 import NotificationSender from './components/NotificationSender';
+import UsageDashboard from './components/UsageDashboard';
 
 type Tab = 'overview' | 'users' | 'firebase';
 
@@ -85,6 +86,9 @@ function AdminDashboard() {
 
                 {tab === 'overview' && (
                     <>
+                        {/* Firebase Usage Limits Dashboard */}
+                        <UsageDashboard />
+
                         <div className="admin-stats">
                             <div className="admin-stat-card">
                                 <div className="stat-value">{users.length}</div>
