@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useI18n } from '@/i18n/I18nProvider';
@@ -9,12 +9,14 @@ import AuthButton from './AuthButton';
 import NotificationBell from './NotificationBell';
 import { messaging } from '@/lib/firebase';
 import { onMessage } from 'firebase/messaging';
+import UserDrawer from './UserDrawer';
 
 export default function Navbar() {
   const pathname = usePathname();
   const { t, toggleLocale } = useI18n();
   const { isAdmin } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
     if (!messaging) return;
@@ -22,8 +24,6 @@ export default function Navbar() {
       console.log('Foreground push notification received:', payload);
       const title = payload.notification?.title || 'New Push Notification';
       const body = payload.notification?.body || '';
-      // For a quick foreground alert, we just use window.alert
-      // In a more complex app, we would use a toast library like react-hot-toast
       alert(`🔔 ${title}\n${body}`);
     });
     return () => unsubscribe();
@@ -38,43 +38,63 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="navbar">
-      <Link href="/" className="navbar-brand">
-        <span className="navbar-brand-icon">⚛</span>
-        RN Learn
-      </Link>
-      <ul className="navbar-links">
-        {links.map(link => (
-          <li key={link.href}>
-            <Link href={link.href} className={pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href)) ? 'active' : ''}>
-              {link.label}
-            </Link>
+    <>
+      <nav className="navbar">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <button
+            className="hamburger-menu"
+            onClick={() => setIsDrawerOpen(true)}
+            aria-label="Open Menu"
+          >
+            ☰
+          </button>
+          <Link href="/" className="navbar-brand">
+            <span className="navbar-brand-icon">⚛</span>
+            RN Learn
+          </Link>
+        </div>
+
+        <ul className="navbar-links">
+          {links.map(link => (
+            <li key={link.href}>
+              <Link href={link.href} className={pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href)) ? 'active' : ''}>
+                {link.label}
+              </Link>
+            </li>
+          ))}
+          {isAdmin && (
+            <li>
+              <Link href="/admin" className={pathname.startsWith('/admin') ? 'active' : ''}>
+                ⚙ Admin
+              </Link>
+            </li>
+          )}
+
+          <li className="desktop-only">
+            <button className="lang-toggle" onClick={toggleLocale}>
+              {t.nav.language}
+            </button>
           </li>
-        ))}
-        {isAdmin && (
+          <li className="desktop-only">
+            <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle Theme" style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', padding: '0 8px', color: 'var(--text-primary)' }}>
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
+          </li>
+
           <li>
-            <Link href="/admin" className={pathname.startsWith('/admin') ? 'active' : ''}>
-              ⚙ Admin
-            </Link>
+            <NotificationBell />
           </li>
-        )}
-        <li>
-          <button className="lang-toggle" onClick={toggleLocale}>
-            {t.nav.language}
-          </button>
-        </li>
-        <li>
-          <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle Theme" style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', padding: '0 8px', color: 'var(--text-primary)' }}>
-            {theme === 'dark' ? '☀️' : '🌙'}
-          </button>
-        </li>
-        <li>
-          <NotificationBell />
-        </li>
-        <li>
-          <AuthButton />
-        </li>
-      </ul>
-    </nav>
+          <li onClick={() => setIsDrawerOpen(true)} style={{ cursor: 'pointer' }}>
+            {/* We wrap AuthButton or just trigger drawer on click */}
+            <AuthButton />
+          </li>
+        </ul>
+      </nav>
+
+      <UserDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+      />
+    </>
   );
 }
